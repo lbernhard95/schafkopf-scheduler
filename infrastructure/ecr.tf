@@ -24,8 +24,8 @@ resource "aws_ecr_lifecycle_policy" "schafkopf_scheduler" {
   })
 }
 
-/*
+
 data "aws_ecr_image" "schafkopf_scheduler" {
   repository_name = aws_ecr_repository.schafkopf_scheduler.name
   image_tag       = "latest"
-}*/
+}

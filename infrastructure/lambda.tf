@@ -1,4 +1,4 @@
-/*resource "aws_lambda_function" "schafkopf_scheduler" {
+resource "aws_lambda_function" "schafkopf_scheduler" {
   function_name    = "schafkopf_scheduler"
   package_type     = "Image"
   image_uri        = "${aws_ecr_repository.schafkopf_scheduler.repository_url}:latest"
@@ -14,7 +14,7 @@
       GMAIL_SENDER_PASSWORD = jsondecode(data.aws_secretsmanager_secret_version.gmail_credentials.secret_string)["GMAIL_SENDER_PASSWORD"]
     }
   }
-}*/
+}
 
 resource "aws_iam_role" "schafkopf_scheduler" {
   name = "schafkopf_scheduler"
