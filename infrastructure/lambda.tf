@@ -33,3 +33,44 @@ resource "aws_iam_role" "schafkopf_scheduler" {
     ]
   })
 }
+
+
+resource "aws_iam_policy" "schafkopf_scheduler" {
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = "logs:CreateLogGroup"
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = "logs:CreateLogStream"
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = "logs:PutLogEvents"
+        Resource = "*"
+      },
+    ]
+  })
+}
+
+
+resource "aws_iam_role_policy_attachment" "schafkopf_scheduler" {
+  role       = aws_iam_role.schafkopf_scheduler.name
+  policy_arn = aws_iam_policy.schafkopf_scheduler.arn
+}
+
+
+resource "aws_lambda_permission" "allow_cloudwatch" {
+  statement_id  = "AllowExecutionFromCloudWatch"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.schafkopf_scheduler.function_name
+  principal     = "events.amazonaws.com"
+
+  # Reference the ARN of the CloudWatch event rule
+  source_arn    = aws_cloudwatch_event_rule.every_day_at_five.arn
+}
