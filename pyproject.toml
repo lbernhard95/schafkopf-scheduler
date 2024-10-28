@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "schafkopf-scheduler"
+version = "0.1.0"
+description = ""
+authors = ["Lukas Bernhard <strange85@web.de>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pydantic = "^2.9.2"
+python-dotenv = "^1.0.1"
+beautifulsoup4 = "^4.12.3"
+requests = "^2.32.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
