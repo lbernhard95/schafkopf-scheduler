@@ -1,0 +1,41 @@
+name: Website
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::082113759242:role/github_oidc_role
+          aws-region: eu-central-1
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22.11.0'
+
+      - name: Install Yarn
+        run: npm install -g yarn@1.22.22
+
+      - name: Install dependencies
+        working-directory: web
+        run: yarn install
+
+      - name: Build project
+        working-directory: web
+        run: yarn build
+
+      - name: Upload to S3
+        working-directory: web
+        run: |
+          aws s3 sync ./build s3://schafkopf-web-082113759242 --delete
