@@ -54,6 +54,28 @@ resource "aws_iam_policy" "schafkopf_scheduler" {
         Action = "logs:PutLogEvents"
         Resource = "*"
       },
+      {
+        "Effect": "Allow",
+        "Action": [
+            "dynamodb:BatchGetItem",
+            "dynamodb:DescribeTable",
+            "dynamodb:GetItem",
+            "dynamodb:Query",
+            "dynamodb:Scan"
+        ],
+        "Resource": [
+          aws_dynamodb_table.emails.arn,
+          aws_dynamodb_table.polls.arn
+        ]
+      },
+      {
+        "Effect": "Allow",
+        "Action": [
+            "dynamodb:PutItem",
+            "dynamodb:UpdateItem",
+        ],
+        "Resource": aws_dynamodb_table.polls.arn
+      }
     ]
   })
 }
