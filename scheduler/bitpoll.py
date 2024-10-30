@@ -1,29 +1,13 @@
 
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 from uuid import uuid4
 from pydantic import BaseModel, computed_field
 import requests
 from bs4 import BeautifulSoup
-
+import locale
 
 BITPOLL_URL = 'https://bitpoll.de'
-BROWSER_HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:131.0) Gecko/20100101 Firefox/131.0',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/png,image/svg+xml,*/*;q=0.8',
-    'Accept-Language': 'en-US,en;q=0.5',
-    'Referer': 'https://bitpoll.de/',
-    'Content-Type': 'application/x-www-form-urlencoded',
-    'Origin': 'https://bitpoll.de',
-    'Connection': 'keep-alive',
-    'Upgrade-Insecure-Requests': '1',
-    'Sec-Fetch-Dest': 'document',
-    'Sec-Fetch-Mode': 'navigate',
-    'Sec-Fetch-Site': 'same-origin',
-    'Sec-Fetch-User': '?1',
-    'Priority': 'u=0, i',
-    'TE': 'trailers',
-}
 
 class VoteDate(BaseModel):
     date: datetime
@@ -34,6 +18,7 @@ class VoteDate(BaseModel):
 
     @staticmethod
     def from_bitpoll_date(date: str) -> "VoteDate":
+        locale.setlocale(locale.LC_TIME, 'de_DE')
         return VoteDate(
             date=datetime.strptime(date, "%a, %d. %b. %Y"),
             yes_count=0, 
@@ -112,7 +97,7 @@ def create_new_poll(csrf_token: str):
         'one_vote_per_user': 'on',
     }
 
-    response = requests.post(f"{BITPOLL_URL}/", headers=BROWSER_HEADERS, data=data)
+    response = requests.post(f"{BITPOLL_URL}/", headers=get_headers(csrf_token), data=data)
 
     if response.status_code != 200:
         raise ValueError(response.text)
@@ -124,7 +109,7 @@ def get_valid_csrf_token() -> str:
     session = requests.Session()
 
     # Step 1: Make an initial GET request to the Bitpoll homepage to get the CSRF token
-    response = session.get(f"{BITPOLL_URL}/", headers=BROWSER_HEADERS)
+    response = session.get(f"{BITPOLL_URL}/", headers=get_headers(None))
     response.raise_for_status()  # Ensure the request was successful
 
     # Step 2: Parse the HTML to find the CSRF token
@@ -137,7 +122,7 @@ def add_choices_to_poll(poll_id: str, csrf_token: str, dates: List[datetime]):
         'csrfmiddlewaretoken': csrf_token,
         "dates": ",".join([d.strftime("%Y-%m-%d") for d in dates])
     }
-    response = requests.post(f"{get_website_from_poll_id(poll_id)}/edit/choices/date/", headers=BROWSER_HEADERS, data=data)
+    response = requests.post(f"{get_website_from_poll_id(poll_id)}/edit/choices/date/", headers=get_headers(csrf_token), data=data)
     
     if response.status_code != 200:
         raise ValueError(response.text)
@@ -145,3 +130,22 @@ def add_choices_to_poll(poll_id: str, csrf_token: str, dates: List[datetime]):
 
 def get_website_from_poll_id(poll_id: str) -> str:
     return f"{BITPOLL_URL}/poll/{poll_id}"
+
+def get_headers(csrf_token: Optional[str]) -> {}:
+    return  {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:131.0) Gecko/20100101 Firefox/131.0',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/png,image/svg+xml,*/*;q=0.8',
+    'Accept-Language': 'en-US,en;q=0.5',
+    'Referer': 'https://bitpoll.de/',
+    'Cookie': f'csrftoken = {csrf_token}' if csrf_token else '',
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Origin': 'https://bitpoll.de',
+    'Connection': 'keep-alive',
+    'Upgrade-Insecure-Requests': '1',
+    'Sec-Fetch-Dest': 'document',
+    'Sec-Fetch-Mode': 'navigate',
+    'Sec-Fetch-Site': 'same-origin',
+    'Sec-Fetch-User': '?1',
+    'Priority': 'u=0, i',
+    'TE': 'trailers',
+}

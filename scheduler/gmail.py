@@ -7,11 +7,11 @@ from email import encoders
 from datetime import datetime
 from typing import List, Optional
 
-import env
+from scheduler import env
 
 
 def send_bitpoll_invitation(receivers: List[str], bitpoll_link: str):
-    html = load_html_template("../templates/poll_invitation.html")
+    html = load_html_template("templates/poll_invitation.html")
     html = html.replace("YOUR_BITPOLL_LINK_HERE", bitpoll_link)
 
     send_email(
@@ -25,12 +25,12 @@ def send_schafkopf_meeting_invitation(receivers: List[str], day: datetime, bitpo
     start=datetime(year=day.year, month=day.month, day=day.day, hour=18, minute=30)
     end=datetime(year=day.year, month=day.month, day=day.day, hour=23)
 
-    html = load_html_template("../templates/schafkopf_scheduled.html")
+    html = load_html_template("templates/schafkopf_scheduled.html")
     html = html.replace("SCHEDULED_DATE_PLACEHOLDER", format_datetime(start))
     html = html.replace("YOUR_BITPOLL_LINK_HERE", bitpoll_link)
 
     send_email(
-        receivers=receivers,
+        receivers=list(set(receivers + [env.get_gmail_sender_address()])),
         subject=f"Schafkopfen on {day.strftime('%d.%m')}",
         body=MIMEText(html, "html"),
         event=create_calendar_entry(
@@ -38,10 +38,6 @@ def send_schafkopf_meeting_invitation(receivers: List[str], day: datetime, bitpo
             start=start, end=end,
         )
     )
-
-
-def load_receivers() -> List[str]:
-    return [env.get_gmail_sender_address()]
 
 
 def send_email(receivers: List[str], subject: str, body: MIMEText, event: Optional[MIMEBase]=None):
