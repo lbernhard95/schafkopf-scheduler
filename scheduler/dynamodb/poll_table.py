@@ -8,8 +8,33 @@ POLL_ITEM_UUID = '021dae01-ac37-4c3c-bc6c-952d3e4a57d5'
 
 
 class PollItem(BaseModel):
-    running_poll_id: Optional[str] = None
-    start_next_poll_date: Optional[datetime] = None
+    running_poll_id: str
+    start_next_poll_date: datetime
+    new_poll_email_sent: datetime
+    event_invitation_email_sent: Optional[datetime] = None
+
+    @staticmethod
+    def create_new(poll_id: str, next_poll_date: datetime) -> "PollItem":
+        return PollItem(
+            running_poll_id=poll_id,
+            start_next_poll_date=next_poll_date,
+            new_poll_email_sent=datetime.now()
+        )
+
+    def event_scheduled_update(self, event_date: datetime):
+        self.start_next_poll_date = event_date
+        self.event_invitation_email_sent = datetime.now()
+
+    def poll(self) -> bool:
+        return (
+            self.running_poll_id and
+            datetime.now() < self.start_next_poll_date and
+            self.event_invitation_email_sent is None
+        )
+
+    def is_time_to_start_new_poll(self) -> bool:
+        return datetime.now() >= self.start_next_poll_date
+
 
 def load(dynamodb) -> PollItem:
     try:

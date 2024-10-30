@@ -3,6 +3,8 @@ from typing import List
 
 from pydantic import BaseModel
 
+from scheduler import env
+
 
 class EmailItem(BaseModel):
     email: str
@@ -14,7 +16,8 @@ def add(dynamodb, email: EmailItem):
 
 
 def load_all_mails(dynamodb) -> List[str]:
-    return [i.email for i in load_all(dynamodb)]
+    registered = [i.email for i in load_all(dynamodb)]
+    return list(set(registered + [env.get_gmail_sender_address()]))
 
 
 def load_all(dynamodb) -> List[EmailItem]:

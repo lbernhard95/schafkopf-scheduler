@@ -19,8 +19,10 @@ class VoteDate(BaseModel):
     @staticmethod
     def from_bitpoll_date(date: str) -> "VoteDate":
         locale.setlocale(locale.LC_TIME, 'de_DE')
+        date = datetime.strptime(date, "%a, %d. %b. %Y")
+        date = date.replace(hour=18, minute=30)
         return VoteDate(
-            date=datetime.strptime(date, "%a, %d. %b. %Y"),
+            date=date,
             yes_count=0, 
             no_count=0,
             probably_no_count=0,

@@ -14,42 +14,43 @@ def send_bitpoll_invitation(receivers: List[str], bitpoll_link: str):
     html = load_html_template("templates/poll_invitation.html")
     html = html.replace("YOUR_BITPOLL_LINK_HERE", bitpoll_link)
 
-    send_email(
+    send(
         receivers=receivers,
-        subject=f"Schafkopfen",
-        body=MIMEText(html, "html"),
+        subject="New Schafkopf Round",
+        body=MIMEText(html, "html")
     )
 
 
-def send_schafkopf_meeting_invitation(receivers: List[str], day: datetime, bitpoll_link: str):
-    start=datetime(year=day.year, month=day.month, day=day.day, hour=18, minute=30)
-    end=datetime(year=day.year, month=day.month, day=day.day, hour=23)
-
+def send_schafkopf_meeting_invitation(receivers: List[str], start: datetime, bitpoll_link: str):
     html = load_html_template("templates/schafkopf_scheduled.html")
     html = html.replace("SCHEDULED_DATE_PLACEHOLDER", format_datetime(start))
     html = html.replace("YOUR_BITPOLL_LINK_HERE", bitpoll_link)
 
-    send_email(
-        receivers=list(set(receivers + [env.get_gmail_sender_address()])),
-        subject=f"Schafkopfen on {day.strftime('%d.%m')}",
+    send(
+        receivers=receivers,
+        subject=f"Schafkopfen on {start.strftime('%d.%m')}",
         body=MIMEText(html, "html"),
-        event=create_calendar_entry(
+        attachment=create_calendar_entry(
             summary="[at] Schafkopfen",
-            start=start, end=end,
+            start=start, end=start.replace(hour=23, minute=0),
         )
     )
 
 
-def send_email(receivers: List[str], subject: str, body: MIMEText, event: Optional[MIMEBase]=None):
+def send(
+    receivers: List[str],
+    subject: str,
+    body: MIMEText,
+    attachment: Optional[MIMEBase]=None
+):
     sender = env.get_gmail_sender_address()
-
     message = MIMEMultipart()
     message['From'] = sender
     message['To'] = ", ".join(receivers)
     message['Subject'] = subject
     message.attach(body)
-    if event:
-        message.attach(event)
+    if attachment:
+        message.attach(attachment)
 
     smtpserver = smtplib.SMTP_SSL('smtp.gmail.com', 465)
     smtpserver.ehlo()
@@ -82,6 +83,7 @@ END:VCALENDAR
         f"attachment; filename=schafkopfen.ics"
     )
     return part
+
 
 def format_datetime(dt: datetime):
     locale.setlocale(locale.LC_TIME, 'en_US.UTF-8') 
