@@ -26,3 +26,13 @@ jobs:
         run: |
           docker build -t 082113759242.dkr.ecr.eu-central-1.amazonaws.com/schafkopf-scheduler-lambda:latest .
           docker push 082113759242.dkr.ecr.eu-central-1.amazonaws.com/schafkopf-scheduler-lambda:latest
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.9.8
+      - name: Initialize Terraform
+        working-directory: infrastructure
+        run: terraform init
+      - name: Terraform Apply
+        working-directory: infrastructure
+        run: terraform apply -auto-approve
