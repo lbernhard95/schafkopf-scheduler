@@ -73,7 +73,9 @@ jobs:
           docker push 082113759242.dkr.ecr.eu-central-1.amazonaws.com/schafkopf-scheduler-lambda:latest
   deploy:
     runs-on: ubuntu-latest
-    needs: build-scheduler
+    needs:
+      - build-scheduler
+      - build-api
     steps:
       - uses: actions/checkout@v4
       - name: Configure AWS Credentials
