@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from typing import List, Optional
 
-from scheduler.bitpoll import VoteDate
+from schafkopf.core.bitpoll import VoteDate
 
 
 

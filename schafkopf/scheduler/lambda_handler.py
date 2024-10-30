@@ -2,9 +2,11 @@ from typing import List
 
 import boto3
 
-from scheduler import gmail, bitpoll, scheduler
-from scheduler.dynamodb import poll_table, email_table
-from scheduler.dynamodb.poll_table import PollItem
+from schafkopf.scheduler import scheduler
+from schafkopf.core import gmail, bitpoll
+from schafkopf.core.dynamodb import email_table
+from schafkopf.core.dynamodb import poll_table
+from schafkopf.core.dynamodb.poll_table import PollItem
 
 
 def lambda_handler(event, context):
@@ -72,5 +74,4 @@ def schedule_next_schafkopf_event(emails: List[str], poll: PollItem) -> PollItem
 
 
 if __name__ == '__main__':
-    from scheduler import env  # ensure loading aws credentials
     lambda_handler({}, {})

@@ -3,7 +3,7 @@ from typing import List
 
 from pydantic import BaseModel
 
-from scheduler import env
+from schafkopf.core import env
 
 
 class EmailItem(BaseModel):

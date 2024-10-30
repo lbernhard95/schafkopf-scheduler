@@ -7,7 +7,7 @@ from email import encoders
 from datetime import datetime
 from typing import List, Optional
 
-from scheduler import env
+from schafkopf.core import env
 
 
 def send_bitpoll_invitation(receivers: List[str], bitpoll_link: str):
