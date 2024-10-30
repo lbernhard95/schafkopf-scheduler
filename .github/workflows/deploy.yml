@@ -11,7 +11,6 @@ permissions:
 
 jobs:
   build:
-    name: deploy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -25,10 +24,10 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
       - name: Build, tag, and push docker image to Amazon ECR
         run: |
+          docker pull  082113759242.dkr.ecr.eu-central-1.amazonaws.com/schafkopf-scheduler-lambda:latest
           docker build -t 082113759242.dkr.ecr.eu-central-1.amazonaws.com/schafkopf-scheduler-lambda:latest .
           docker push 082113759242.dkr.ecr.eu-central-1.amazonaws.com/schafkopf-scheduler-lambda:latest
   deploy:
-    name: deploy
     runs-on: ubuntu-latest
     needs: build
     steps:
