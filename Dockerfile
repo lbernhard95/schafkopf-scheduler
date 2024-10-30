@@ -17,6 +17,7 @@ COPY poetry.lock /app/
 RUN poetry config virtualenvs.create false && poetry install --no-root
 
 COPY scheduler scheduler
+COPY templates templates
 COPY lambda_handler.py lambda_handler.py
 ENTRYPOINT [ "/usr/local/bin/python", "-m", "awslambdaric" ]
 CMD [ "lambda_handler.lambda_handler" ]
