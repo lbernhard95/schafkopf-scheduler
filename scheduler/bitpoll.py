@@ -2,6 +2,8 @@
 from datetime import datetime
 from typing import List, Optional
 from uuid import uuid4
+
+import bs4
 from pydantic import BaseModel, computed_field
 import requests
 from bs4 import BeautifulSoup
@@ -43,17 +45,17 @@ class VoteDate(BaseModel):
     @property
     def participation_count(self) -> int:
         return self.yes_count + self.no_count + self.probably_no_count + self.probably_yes_count
-    
 
 
-def get_poll_webpage(poll_id: str) -> BeautifulSoup:
+def get_voting_table(poll_id: str) -> bs4.Tag:
     rsp = requests.get(get_website_from_poll_id(poll_id))
-    return BeautifulSoup(rsp.text, features="html.parser")
+    page = BeautifulSoup(rsp.text, features="html.parser")
+    return page.find('table', id='poll')
 
 
-def collect_vote_dates(poll_page: BeautifulSoup) -> List[VoteDate]:
-    dates = [date.get_text(strip=True) for date in poll_page.select("thead th.choice-group")]
-    details_row = poll_page.select("tfoot tr.print-only")[1]
+def collect_vote_dates(table: bs4.Tag) -> List[VoteDate]:
+    dates = [date.get_text(strip=True) for date in table.select("thead th.choice-group")]
+    details_row = table.select("tfoot tr.print-only")[1]
     
     all_votes = []
     for i, cell in enumerate(details_row.select("td")):
