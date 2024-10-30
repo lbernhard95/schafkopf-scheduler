@@ -1,4 +1,4 @@
-resource "aws_lambda_function" "api" {
+/*resource "aws_lambda_function" "api" {
   function_name    = "schafkopf_api"
   package_type     = "Image"
   image_uri        = "${aws_ecr_repository.api.repository_url}:latest"
@@ -8,7 +8,7 @@ resource "aws_lambda_function" "api" {
 
   role = aws_iam_role.api.arn
 }
-
+*/
 resource "aws_iam_role" "api" {
   name = "schafkopf_api"
   assume_role_policy = jsonencode({
@@ -57,7 +57,7 @@ resource "aws_iam_role_policy_attachment" "api" {
   policy_arn = aws_iam_policy.api.arn
 }
 
-
+/*
 resource "aws_lambda_permission" "wheatley-api" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
@@ -65,3 +65,4 @@ resource "aws_lambda_permission" "wheatley-api" {
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_api_gateway_rest_api.api.execution_arn}/*"
 }
+*/

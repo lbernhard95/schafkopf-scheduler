@@ -24,8 +24,8 @@ resource "aws_ecr_lifecycle_policy" "api" {
   })
 }
 
-
+/*
 data "aws_ecr_image" "api" {
   repository_name = aws_ecr_repository.api.name
   image_tag       = "latest"
-}
+}*/

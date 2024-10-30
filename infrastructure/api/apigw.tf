@@ -9,17 +9,17 @@ resource "aws_api_gateway_rest_api" "api" {
 
 resource "aws_api_gateway_domain_name" "api" {
   domain_name      = local.api_sub_domain
-  regional_certificate_arn = data.aws_acm_certificate.cert.arn
+  regional_certificate_arn = aws_acm_certificate.certs.arn
   endpoint_configuration {
     types = ["REGIONAL"]
   }
 }
-
+/*
 resource "aws_api_gateway_base_path_mapping" "api" {
   domain_name = aws_api_gateway_domain_name.api.domain_name
   stage_name  = aws_api_gateway_stage.api.stage_name
   api_id      = aws_api_gateway_rest_api.api.id
-}
+}*/
 
 
 resource "aws_api_gateway_rest_api_policy" "api_policy" {
@@ -39,7 +39,7 @@ resource "aws_api_gateway_rest_api_policy" "api_policy" {
 }
 
 
-resource "aws_api_gateway_deployment" "api" {
+/*resource "aws_api_gateway_deployment" "api" {
   rest_api_id       = aws_api_gateway_rest_api.api.id
   triggers = {
     # NOTE: The configuration below will satisfy ordering considerations,
@@ -66,7 +66,7 @@ resource "aws_api_gateway_stage" "api" {
   deployment_id = aws_api_gateway_deployment.api.id
   rest_api_id   = aws_api_gateway_rest_api.api.id
   stage_name    = "v1"
-}
+}*/
 
 resource "aws_api_gateway_resource" "api" {
   rest_api_id = aws_api_gateway_rest_api.api.id
@@ -84,7 +84,7 @@ resource "aws_api_gateway_method" "api" {
     "method.request.path.proxy" = true
   }
 }
-
+/*
 resource "aws_api_gateway_integration" "api" {
   rest_api_id             = aws_api_gateway_rest_api.api.id
   resource_id             = aws_api_gateway_resource.api.id
@@ -93,3 +93,4 @@ resource "aws_api_gateway_integration" "api" {
   type                    = "AWS_PROXY"
   uri                     = aws_lambda_function.api.invoke_arn
 }
+*/

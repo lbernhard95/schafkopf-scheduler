@@ -6,3 +6,7 @@ module "web" {
     aws.us-east = aws.us-east
   }
 }
+
+module "api" {
+  source = "./api"
+}
