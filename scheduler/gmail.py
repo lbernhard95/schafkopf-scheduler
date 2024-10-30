@@ -11,7 +11,7 @@ from scheduler import env
 
 
 def send_bitpoll_invitation(receivers: List[str], bitpoll_link: str):
-    html = load_html_template("templates/poll_invitation.html")
+    html = load_html_template(f"{env.BASE_PATH}/templates/poll_invitation.html")
     html = html.replace("YOUR_BITPOLL_LINK_HERE", bitpoll_link)
 
     send(
@@ -22,7 +22,7 @@ def send_bitpoll_invitation(receivers: List[str], bitpoll_link: str):
 
 
 def send_schafkopf_meeting_invitation(receivers: List[str], start: datetime, bitpoll_link: str):
-    html = load_html_template("templates/schafkopf_scheduled.html")
+    html = load_html_template(f"{env.BASE_PATH}/templates/schafkopf_scheduled.html")
     html = html.replace("SCHEDULED_DATE_PLACEHOLDER", format_datetime(start))
     html = html.replace("YOUR_BITPOLL_LINK_HERE", bitpoll_link)
 
