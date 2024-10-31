@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { HelloGetResponse } from './types.gen';
+import type { HelloGetResponse, SubscribeToSchafkopfRoundsSubscribePostData, SubscribeToSchafkopfRoundsSubscribePostResponse, GetPollPollGetResponse } from './types.gen';
 
 /**
  * Hello
@@ -13,4 +13,31 @@ import type { HelloGetResponse } from './types.gen';
 export const helloGet = (): CancelablePromise<HelloGetResponse> => { return __request(OpenAPI, {
     method: 'GET',
     url: '/'
+}); };
+
+/**
+ * Subscribe To Schafkopf Rounds
+ * @param data The data for the request.
+ * @param data.requestBody
+ * @returns SubscribeResponse Successful Response
+ * @throws ApiError
+ */
+export const subscribeToSchafkopfRoundsSubscribePost = (data: SubscribeToSchafkopfRoundsSubscribePostData): CancelablePromise<SubscribeToSchafkopfRoundsSubscribePostResponse> => { return __request(OpenAPI, {
+    method: 'POST',
+    url: '/subscribe',
+    body: data.requestBody,
+    mediaType: 'application/json',
+    errors: {
+        422: 'Validation Error'
+    }
+}); };
+
+/**
+ * Get Poll
+ * @returns PollResponse Successful Response
+ * @throws ApiError
+ */
+export const getPollPollGet = (): CancelablePromise<GetPollPollGetResponse> => { return __request(OpenAPI, {
+    method: 'GET',
+    url: '/poll'
 }); };

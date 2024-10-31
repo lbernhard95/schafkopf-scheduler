@@ -1,22 +1,40 @@
 import React from 'react';
-import { Button, Typography } from '@mui/material';
-import { OpenAPI, helloGet } from './client';
+import {Container, Paper, Typography } from '@mui/material';
+import { OpenAPI } from './client';
+import EmailSubscribe from './pages/EmailSubscribe';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { CssBaseline } from '@mui/material';
+
+// Create a custom theme
+const theme = createTheme({
+  palette: {
+    mode: 'dark', // Set the palette mode to dark
+    primary: {
+      main: '#FFA500', // Orange color for primary
+    },
+    background: {
+      default: '#333333', // Dark gray background
+      paper: '#424242', // Darker gray for paper elements
+    },
+  },
+});
 
 OpenAPI.BASE = process.env.REACT_APP_API_URL!;
 
 const App: React.FC = () => {
 
   return (
-    <div style={{ padding: 20 }}>
+    <ThemeProvider theme={theme}>
+    <Container component="main" maxWidth="lg" style={{ paddingTop: '20px'}}>
+      <Paper elevation={3} style={{ padding: '20px', textAlign: 'center' }}>
       <Typography variant="h4" component="h1" gutterBottom>
-        Welcome to My Material App
+        [at] Schafkopf Group
       </Typography>
-      <Button variant="contained" color="primary" onClick={() => {
-         helloGet().then(msg => console.log("data", msg)).catch(e => console.log("error", e))
-      }}>
-        Hello Material-UI
-      </Button>
-    </div>
+        <CssBaseline/>
+        <EmailSubscribe/>
+      </Paper>
+    </Container>
+    </ThemeProvider>
   );
 };
 

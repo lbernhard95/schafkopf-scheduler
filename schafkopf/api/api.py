@@ -2,6 +2,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from fastapi import FastAPI
 
+from schafkopf.api.models import SubscribeRequest, SubscribeResponse, PollResponse
+from core.dynamodb import email_table, poll_table
+
 app = FastAPI(
     title="Schafkopf Scheduler API",
     openapi_version="3.0.0",
@@ -14,6 +17,22 @@ app = FastAPI(
 )
 def hello() -> str:
     return "Hello World"
+
+
+@app.post("/subscribe")
+def subscribe_to_schafkopf_rounds(req: SubscribeRequest) ->SubscribeResponse:
+    import boto3
+    dynamodb = boto3.resource("dynamodb")
+    email_table.add(dynamodb, req.to_email_item())
+    return SubscribeResponse(email=req.email)
+
+
+@app.get("/poll")
+def get_poll() -> PollResponse:
+    import boto3
+    dynamodb = boto3.resource("dynamodb")
+    poll_item = poll_table.load(dynamodb)
+    return PollResponse.from_item(poll_item)
 
 
 app.add_middleware(

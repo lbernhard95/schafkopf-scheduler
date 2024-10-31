@@ -9,4 +9,6 @@ module "web" {
 
 module "api" {
   source = "./api"
+  dynamodb_email_arn = aws_dynamodb_table.emails.arn
+  dynamodb_polls_arn = aws_dynamodb_table.polls.arn
 }

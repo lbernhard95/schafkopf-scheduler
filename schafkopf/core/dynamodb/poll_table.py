@@ -12,17 +12,20 @@ class PollItem(BaseModel):
     start_next_poll_date: datetime
     new_poll_email_sent: datetime
     event_invitation_email_sent: Optional[datetime] = None
+    next_schafkopf_event: Optional[datetime] = None
 
     @staticmethod
     def create_new(poll_id: str, next_poll_date: datetime) -> "PollItem":
         return PollItem(
             running_poll_id=poll_id,
             start_next_poll_date=next_poll_date,
-            new_poll_email_sent=datetime.now()
+            new_poll_email_sent=datetime.now(),
+            next_schafkopf_event=None
         )
 
     def event_scheduled_update(self, event_date: datetime):
         self.start_next_poll_date = event_date
+        self.next_schafkopf_event = event_date
         self.event_invitation_email_sent = datetime.now()
 
     def poll(self) -> bool:

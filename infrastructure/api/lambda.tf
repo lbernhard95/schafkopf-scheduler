@@ -47,6 +47,28 @@ resource "aws_iam_policy" "api" {
         Action = "logs:PutLogEvents"
         Resource = "*"
       },
+      {
+        "Effect": "Allow",
+        "Action": [
+            "dynamodb:BatchGetItem",
+            "dynamodb:DescribeTable",
+            "dynamodb:GetItem",
+            "dynamodb:Query",
+            "dynamodb:Scan"
+        ],
+        "Resource": [
+          var.dynamodb_email_arn,
+          var.dynamodb_polls_arn,
+        ]
+      },
+      {
+        "Effect": "Allow",
+        "Action": [
+            "dynamodb:PutItem",
+            "dynamodb:UpdateItem",
+        ],
+        "Resource": var.dynamodb_email_arn,
+      }
     ]
   })
 }
