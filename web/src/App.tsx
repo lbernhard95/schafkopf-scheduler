@@ -31,7 +31,7 @@ const App: React.FC = () => {
   }, []);
   return (
     <ThemeProvider theme={theme}>
-      <Paper elevation={3} sx={{ maxWidth: 1000, height: '80vh', margin: 'auto', marginTop: "15px", padding: '20px' }}>
+      <Paper elevation={3} sx={{ maxWidth: 1000, height: '100%', margin: 'auto', marginTop: "15px", padding: '20px' }}>
         <Stack spacing={2}
           alignItems="center"
           justifyContent="center" >
