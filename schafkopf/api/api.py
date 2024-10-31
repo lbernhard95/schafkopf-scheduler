@@ -19,7 +19,8 @@ def hello() -> str:
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://schafkopf.lukas-bernhard.de",  # your frontend domain
+        "https://schafkopf.lukas-bernhard.de",
+        "http://localhost:3000",
     ],
     allow_credentials=True,
     allow_methods=["*"],
