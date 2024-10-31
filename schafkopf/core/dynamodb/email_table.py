@@ -19,6 +19,10 @@ def load_all_mails(dynamodb) -> List[str]:
     registered = [i.email for i in load_all(dynamodb)]
     return list(set(registered + [env.get_gmail_sender_address()]))
 
+def count(dynamodb) -> int:
+    table = dynamodb.Table("schafkopf_emails")
+    item_count = table.item_count
+    return item_count
 
 def load_all(dynamodb) -> List[EmailItem]:
     try:

@@ -48,6 +48,18 @@ export const $PollResponse = {
     title: 'PollResponse'
 } as const;
 
+export const $SubscribeCountResponse = {
+    properties: {
+        count: {
+            type: 'integer',
+            title: 'Count'
+        }
+    },
+    type: 'object',
+    required: ['count'],
+    title: 'SubscribeCountResponse'
+} as const;
+
 export const $SubscribeRequest = {
     properties: {
         email: {

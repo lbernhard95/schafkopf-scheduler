@@ -11,6 +11,10 @@ export type PollResponse = {
     current_poll_started: string;
 };
 
+export type SubscribeCountResponse = {
+    count: number;
+};
+
 export type SubscribeRequest = {
     email: string;
 };
@@ -32,6 +36,8 @@ export type SubscribeToSchafkopfRoundsSubscribePostData = {
 };
 
 export type SubscribeToSchafkopfRoundsSubscribePostResponse = SubscribeResponse;
+
+export type GetSubscriberCountSubscribersCountGetResponse = SubscribeCountResponse;
 
 export type GetPollPollGetResponse = PollResponse;
 
@@ -58,6 +64,16 @@ export type $OpenApiTs = {
                  * Validation Error
                  */
                 422: HTTPValidationError;
+            };
+        };
+    };
+    '/subscribers/count': {
+        get: {
+            res: {
+                /**
+                 * Successful Response
+                 */
+                200: SubscribeCountResponse;
             };
         };
     };

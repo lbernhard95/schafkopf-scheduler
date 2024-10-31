@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { HelloGetResponse, SubscribeToSchafkopfRoundsSubscribePostData, SubscribeToSchafkopfRoundsSubscribePostResponse, GetPollPollGetResponse } from './types.gen';
+import type { HelloGetResponse, SubscribeToSchafkopfRoundsSubscribePostData, SubscribeToSchafkopfRoundsSubscribePostResponse, GetSubscriberCountSubscribersCountGetResponse, GetPollPollGetResponse } from './types.gen';
 
 /**
  * Hello
@@ -30,6 +30,16 @@ export const subscribeToSchafkopfRoundsSubscribePost = (data: SubscribeToSchafko
     errors: {
         422: 'Validation Error'
     }
+}); };
+
+/**
+ * Get Subscriber Count
+ * @returns SubscribeCountResponse Successful Response
+ * @throws ApiError
+ */
+export const getSubscriberCountSubscribersCountGet = (): CancelablePromise<GetSubscriberCountSubscribersCountGetResponse> => { return __request(OpenAPI, {
+    method: 'GET',
+    url: '/subscribers/count'
 }); };
 
 /**

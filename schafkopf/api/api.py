@@ -2,7 +2,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from fastapi import FastAPI
 
-from schafkopf.api.models import SubscribeRequest, SubscribeResponse, PollResponse
+from schafkopf.api.models import SubscribeRequest, SubscribeResponse, PollResponse, SubscribeCountResponse
 from schafkopf.core.dynamodb import email_table, poll_table
 
 app = FastAPI(
@@ -12,13 +12,6 @@ app = FastAPI(
 )
 
 
-@app.get(
-    "/"
-)
-def hello() -> str:
-    return "Hello World"
-
-
 @app.post("/subscribe")
 def subscribe_to_schafkopf_rounds(req: SubscribeRequest) ->SubscribeResponse:
     import boto3
@@ -26,6 +19,14 @@ def subscribe_to_schafkopf_rounds(req: SubscribeRequest) ->SubscribeResponse:
     email_table.add(dynamodb, req.to_email_item())
     return SubscribeResponse(email=req.email)
 
+
+@app.get("/subscribers/count")
+def get_subscriber_count() -> SubscribeCountResponse:
+    import boto3
+    dynamodb = boto3.resource("dynamodb")
+    return SubscribeCountResponse(
+        count=email_table.count(dynamodb)
+    )
 
 @app.get("/poll")
 def get_poll() -> PollResponse:
