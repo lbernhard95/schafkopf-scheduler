@@ -19,9 +19,13 @@ def hello() -> str:
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "*"
+        "https://schafkopf.lukas-bernhard.de",  # your frontend domain
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+if __name__ == '__main__':
+    import uvicorn
+    uvicorn.run("schafkopf.api.api:app", port=8000, log_level="info", reload=True)
