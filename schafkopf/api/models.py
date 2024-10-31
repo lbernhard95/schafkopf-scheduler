@@ -3,9 +3,9 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from core import bitpoll
-from core.dynamodb.email_table import EmailItem
-from core.dynamodb.poll_table import PollItem
+from schafkopf.core import bitpoll
+from schafkopf.core.dynamodb.email_table import EmailItem
+from schafkopf.core.dynamodb.poll_table import PollItem
 
 
 class SubscribeRequest(BaseModel):
@@ -22,8 +22,9 @@ class SubscribeResponse(BaseModel):
 class PollResponse(BaseModel):
     bitpoll_link: str
     start_next_poll_date: datetime
-    next_schafkopf_event: datetime
+    next_schafkopf_event: Optional[datetime] = None
     current_poll_started: datetime
+
 
     @staticmethod
     def from_item(item: PollItem) -> "PollResponse":

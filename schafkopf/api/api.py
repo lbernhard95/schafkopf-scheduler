@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 
 from schafkopf.api.models import SubscribeRequest, SubscribeResponse, PollResponse
-from core.dynamodb import email_table, poll_table
+from schafkopf.core.dynamodb import email_table, poll_table
 
 app = FastAPI(
     title="Schafkopf Scheduler API",

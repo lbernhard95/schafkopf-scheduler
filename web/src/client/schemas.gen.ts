@@ -26,8 +26,15 @@ export const $PollResponse = {
             title: 'Start Next Poll Date'
         },
         next_schafkopf_event: {
-            type: 'string',
-            format: 'date-time',
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
             title: 'Next Schafkopf Event'
         },
         current_poll_started: {
@@ -37,7 +44,7 @@ export const $PollResponse = {
         }
     },
     type: 'object',
-    required: ['bitpoll_link', 'start_next_poll_date', 'next_schafkopf_event', 'current_poll_started'],
+    required: ['bitpoll_link', 'start_next_poll_date', 'current_poll_started'],
     title: 'PollResponse'
 } as const;
 

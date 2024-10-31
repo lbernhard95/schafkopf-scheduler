@@ -7,7 +7,7 @@ export type HTTPValidationError = {
 export type PollResponse = {
     bitpoll_link: string;
     start_next_poll_date: string;
-    next_schafkopf_event: string;
+    next_schafkopf_event?: string | null;
     current_poll_started: string;
 };
 

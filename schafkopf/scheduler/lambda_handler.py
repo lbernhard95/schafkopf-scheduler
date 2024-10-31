@@ -14,7 +14,7 @@ def lambda_handler(event, context):
     dynamodb = boto3.resource("dynamodb")
     poll = poll_table.load(dynamodb)
     subscribed_emails = email_table.load_all_mails(dynamodb)
-    if poll.poll():
+    if poll.poll_is_running():
         new_poll = schedule_next_schafkopf_event(subscribed_emails, poll)
     elif poll.is_time_to_start_new_poll():
         new_poll = start_new_poll(subscribed_emails)

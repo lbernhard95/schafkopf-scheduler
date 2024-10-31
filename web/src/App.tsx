@@ -1,9 +1,10 @@
 import React from 'react';
-import {Container, Paper, Typography } from '@mui/material';
+import {Stack, Paper, Typography, Divider } from '@mui/material';
 import { OpenAPI } from './client';
 import EmailSubscribe from './pages/EmailSubscribe';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
+import SchedulingState from './pages/SchedulingState';
 
 // Create a custom theme
 const theme = createTheme({
@@ -25,15 +26,20 @@ const App: React.FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
-    <Container component="main" maxWidth="lg" style={{ paddingTop: '20px'}}>
-      <Paper elevation={3} style={{ padding: '20px', textAlign: 'center' }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        [at] Schafkopf Group
-      </Typography>
-        <CssBaseline/>
-        <EmailSubscribe/>
+      <Paper elevation={3} sx={{ maxWidth: 1000, height: '80vh', margin: 'auto', marginTop: "15px", padding: '20px' }}>
+        <Stack spacing={2}
+        alignItems="center"
+        justifyContent="center"
+        sx={{ height: '100%' }} >
+          <Typography variant="h4" component="h1" gutterBottom>
+            [at] Schafkopf Group
+          </Typography>
+          <CssBaseline/>
+          <EmailSubscribe/>
+          <Divider></Divider>
+          <SchedulingState/>
+        </Stack>
       </Paper>
-    </Container>
     </ThemeProvider>
   );
 };

@@ -28,7 +28,7 @@ class PollItem(BaseModel):
         self.next_schafkopf_event = event_date
         self.event_invitation_email_sent = datetime.now()
 
-    def poll(self) -> bool:
+    def poll_is_running(self) -> bool:
         return (
             self.running_poll_id and
             datetime.now() < self.start_next_poll_date and
