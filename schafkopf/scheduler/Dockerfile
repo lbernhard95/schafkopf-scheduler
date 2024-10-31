@@ -4,6 +4,11 @@ WORKDIR /app
 # https://docs.aws.amazon.com/lambda/latest/dg/python-image.html#python-image-clients
 RUN pip install awslambdaric
 
+RUN apt-get update && \
+    apt-get install -y locales && \
+    locale-gen de_DE.UTF-8 && \
+    update-locale \
+
 ENV POETRY_VIRTUALENVS_CREATE=false \
     POETRY_NO_INTERACTION=1 \
     POETRY_HOME="/opt/poetry"
