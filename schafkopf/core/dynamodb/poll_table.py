@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Optional
 
 from pydantic import BaseModel
@@ -11,7 +11,6 @@ class PollItem(BaseModel):
     running_poll_id: str
     start_next_poll_date: datetime
     new_poll_email_sent: datetime
-    event_invitation_email_sent: Optional[datetime] = None
     next_schafkopf_event: Optional[datetime] = None
 
     @staticmethod
@@ -24,15 +23,14 @@ class PollItem(BaseModel):
         )
 
     def event_scheduled_update(self, event_date: datetime):
-        self.start_next_poll_date = event_date
+        self.start_next_poll_date = event_date + timedelta(days=1)
         self.next_schafkopf_event = event_date
-        self.event_invitation_email_sent = datetime.now()
 
     def poll_is_running(self) -> bool:
         return (
             self.running_poll_id and
             datetime.now() < self.start_next_poll_date and
-            self.event_invitation_email_sent is None
+            self.next_schafkopf_event is None
         )
 
     def is_time_to_start_new_poll(self) -> bool:

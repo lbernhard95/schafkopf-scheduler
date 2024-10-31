@@ -103,7 +103,9 @@ const SchedulingState: React.FC = () => {
               </TimelineOppositeContent>
               <TimelineSeparator>
                 <TimelineConnector/>
-                <ScheduledIcon/>
+                <TimelineDot color={poll.next_schafkopf_event === null ? "grey": "primary"} variant="outlined">
+                  <Timer/>
+                </TimelineDot>
                 <TimelineConnector/>
               </TimelineSeparator>
               <TimelineContent sx={{m: 'auto 0'}}>
@@ -132,12 +134,6 @@ const RunningIcon: React.FC = () => {
 const PendingIcon: React.FC = () => {
   return <TimelineDot color="grey" variant="outlined">
     <QuestionMark/>
-  </TimelineDot>
-}
-
-const ScheduledIcon: React.FC = () => {
-  return <TimelineDot color="grey" variant="outlined">
-    <Timer/>
   </TimelineDot>
 }
 
