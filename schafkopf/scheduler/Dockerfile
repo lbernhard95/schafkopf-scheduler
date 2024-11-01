@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 python:3.12-slim
+FROM --platform=linux/amd64 python:3.12
 WORKDIR /app
 
 # https://docs.aws.amazon.com/lambda/latest/dg/python-image.html#python-image-clients
