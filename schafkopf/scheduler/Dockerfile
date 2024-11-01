@@ -4,19 +4,19 @@ WORKDIR /app
 # https://docs.aws.amazon.com/lambda/latest/dg/python-image.html#python-image-clients
 RUN pip install awslambdaric
 
+# Install required packages and generate locale
 RUN apt-get update && \
-    apt-get install -y locales && \
-    locale-gen de_DE.UTF-8 && \
-    update-locale LANG=de_DE.UTF-8 LC_ALL=de_DE.UTF-8
+    apt-get install -y --no-install-recommends locales && \
+    rm -rf /var/lib/apt/lists/* && \
+    echo "de_DE.UTF-8 UTF-8" > /etc/locale.gen && \
+    locale-gen && \
+    update-locale LANG=de_DE.UTF-8
 
-# Set environment variables for locale
+# Set locale environment variables
 ENV LANG=de_DE.UTF-8 \
     LC_ALL=de_DE.UTF-8 \
     LANGUAGE=de_DE.UTF-8
 
-ENV POETRY_VIRTUALENVS_CREATE=false \
-    POETRY_NO_INTERACTION=1 \
-    POETRY_HOME="/opt/poetry"
 ENV PYTHONPATH="/app"
 
 RUN pip install poetry==1.8.4
