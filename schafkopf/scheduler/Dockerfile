@@ -7,7 +7,12 @@ RUN pip install awslambdaric
 RUN apt-get update && \
     apt-get install -y locales && \
     locale-gen de_DE.UTF-8 && \
-    update-locale \
+    update-locale LANG=de_DE.UTF-8 LC_ALL=de_DE.UTF-8
+
+# Set environment variables for locale
+ENV LANG=de_DE.UTF-8 \
+    LC_ALL=de_DE.UTF-8 \
+    LANGUAGE=de_DE.UTF-8
 
 ENV POETRY_VIRTUALENVS_CREATE=false \
     POETRY_NO_INTERACTION=1 \
