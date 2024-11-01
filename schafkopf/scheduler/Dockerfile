@@ -14,7 +14,7 @@ RUN apt-get update && \
 
 # Set locale environment variables
 ENV LANG=de_DE.UTF-8 \
-    LC_TIME=de_DE.UTF-8 \
+    LC_ALL=de_DE.UTF-8 \
     LANGUAGE=de_DE.UTF-8
 
 ENV PYTHONPATH="/app"
