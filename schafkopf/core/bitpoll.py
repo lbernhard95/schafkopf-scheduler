@@ -7,7 +7,6 @@ import bs4
 from pydantic import BaseModel, computed_field
 import requests
 from bs4 import BeautifulSoup
-import locale
 
 BITPOLL_URL = 'https://bitpoll.de'
 
@@ -20,8 +19,7 @@ class VoteDate(BaseModel):
 
     @staticmethod
     def from_bitpoll_date(date: str) -> "VoteDate":
-        locale.setlocale(locale.LC_ALL, 'de_DE')
-        date = datetime.strptime(date, "%a, %d. %b. %Y")
+        date = parse_german_datetime(date)
         date = date.replace(hour=18, minute=30)
         return VoteDate(
             date=date,
@@ -153,3 +151,25 @@ def get_headers(csrf_token: Optional[str]) -> {}:
     'Priority': 'u=0, i',
     'TE': 'trailers',
 }
+
+
+def parse_german_datetime(date_string: str) -> datetime:
+    months = {
+        "Jan": 1, "Feb": 2, "Mär": 3, "Apr": 4, "Mai": 5, "Jun": 6,
+        "Jul": 7, "Aug": 8, "Sep": 9, "Okt": 10, "Nov": 11, "Dez": 12
+    }
+
+    parts = date_string.split()
+
+    day_str = parts[1][:-1]
+    month_str = parts[2][:-1]
+    year_str = parts[3]
+
+    day = int(day_str)
+    month = months.get(month_str, None)
+    year = int(year_str)
+
+    if month is None:
+        raise ValueError("Invalid month abbreviation")
+
+    return datetime(year=year, month=month, day=day)
