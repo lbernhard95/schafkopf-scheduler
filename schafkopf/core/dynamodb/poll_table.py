@@ -29,12 +29,12 @@ class PollItem(BaseModel):
     def poll_is_running(self) -> bool:
         return (
             self.running_poll_id and
-            datetime.now() < self.start_next_poll_date and
+            not self.is_time_to_start_new_poll() and
             self.next_schafkopf_event is None
         )
 
     def is_time_to_start_new_poll(self) -> bool:
-        return datetime.now() >= self.start_next_poll_date
+        return datetime.now().date() >= self.start_next_poll_date.date()
 
 
 def load(dynamodb) -> PollItem:
