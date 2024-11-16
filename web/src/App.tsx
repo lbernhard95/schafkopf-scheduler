@@ -1,10 +1,10 @@
-import React, {useEffect, useState } from 'react';
-import {Stack, Paper, Typography } from '@mui/material';
-import { OpenAPI, SubscribeCountResponse, getSubscriberCountSubscribersCountGet } from './client';
-import EmailSubscribe from './pages/EmailSubscribe';
+import React from 'react';
+import { OpenAPI } from './client';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { CssBaseline } from '@mui/material';
-import SchedulingState from './pages/SchedulingState';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from './pages/Home/Home';
+import Unsubscribe from './pages/Unsubscribe';
+import { Paper } from '@mui/material';
 
 // Create a custom theme
 const theme = createTheme({
@@ -23,35 +23,20 @@ const theme = createTheme({
 OpenAPI.BASE = process.env.REACT_APP_API_URL!;
 
 const App: React.FC = () => {
-  const [memberCount, setMemberCount] = useState<SubscribeCountResponse | undefined>()
-  useEffect(() => {
-    getSubscriberCountSubscribersCountGet()
-        .then(d => setMemberCount(d))
-        .catch(e => console.log(e))
-  }, []);
   return (
     <ThemeProvider theme={theme}>
-      <Paper elevation={3} sx={{ maxWidth: 1000, height: '100%', margin: 'auto', marginTop: "15px", padding: '20px' }}>
-        <Stack spacing={2}
-          alignItems="center"
-          justifyContent="center" >
-          <CssBaseline/>
-          <Typography variant="h4" component="h1" gutterBottom={false}>
-            [at] Schafkopf Group
-          </Typography>
-          <Typography style={{ minHeight: '1em' }}>
-            {memberCount !== undefined ? `Already ${memberCount.count} members subscribed` : "\u00A0"}
-          </Typography>
-          <EmailSubscribe/>
-        </Stack>
-        <div  style={{ marginTop: 50}}>
-        <Stack spacing={2}
-        alignItems="center"
-        justifyContent="center">
-          <SchedulingState/>
-        </Stack>
-          </div>
-      </Paper>
+      <div style={{ maxWidth: '100wh', height: '100vh', background: '#333333', padding: '20px' }}>
+        <Paper elevation={3} sx={{ maxWidth: 1000, height: '80vh', margin: 'auto', padding: '20px' }}>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/unsubscribe" element={<Unsubscribe />}>
+                <Route path="*" element={<Home />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </Paper>
+      </div>
     </ThemeProvider>
   );
 };

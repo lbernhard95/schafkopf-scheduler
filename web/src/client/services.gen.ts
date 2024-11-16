@@ -3,17 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { HelloGetResponse, SubscribeToSchafkopfRoundsSubscribePostData, SubscribeToSchafkopfRoundsSubscribePostResponse, GetSubscriberCountSubscribersCountGetResponse, GetPollPollGetResponse } from './types.gen';
-
-/**
- * Hello
- * @returns string Successful Response
- * @throws ApiError
- */
-export const helloGet = (): CancelablePromise<HelloGetResponse> => { return __request(OpenAPI, {
-    method: 'GET',
-    url: '/'
-}); };
+import type { SubscribeToSchafkopfRoundsSubscribePostData, SubscribeToSchafkopfRoundsSubscribePostResponse, DeleteSubscriberFromMailingListSubscriberDeleteData, DeleteSubscriberFromMailingListSubscriberDeleteResponse, GetSubscriberCountSubscribersCountGetResponse, GetPollPollGetResponse } from './types.gen';
 
 /**
  * Subscribe To Schafkopf Rounds
@@ -27,6 +17,24 @@ export const subscribeToSchafkopfRoundsSubscribePost = (data: SubscribeToSchafko
     url: '/subscribe',
     body: data.requestBody,
     mediaType: 'application/json',
+    errors: {
+        422: 'Validation Error'
+    }
+}); };
+
+/**
+ * Delete Subscriber From Mailing List
+ * @param data The data for the request.
+ * @param data.email
+ * @returns SubscribeResponse Successful Response
+ * @throws ApiError
+ */
+export const deleteSubscriberFromMailingListSubscriberDelete = (data: DeleteSubscriberFromMailingListSubscriberDeleteData): CancelablePromise<DeleteSubscriberFromMailingListSubscriberDeleteResponse> => { return __request(OpenAPI, {
+    method: 'DELETE',
+    url: '/subscriber',
+    query: {
+        email: data.email
+    },
     errors: {
         422: 'Validation Error'
     }

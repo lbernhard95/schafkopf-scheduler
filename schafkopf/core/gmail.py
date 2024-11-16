@@ -17,7 +17,7 @@ def send_bitpoll_invitation(receivers: List[str], bitpoll_link: str):
     send(
         receivers=receivers,
         subject="New Schafkopf Round",
-        body=MIMEText(html, "html")
+        body=html
     )
 
 
@@ -29,7 +29,7 @@ def send_schafkopf_meeting_invitation(receivers: List[str], start: datetime, bit
     send(
         receivers=receivers,
         subject=f"Schafkopfen on {start.strftime('%d.%m')}",
-        body=MIMEText(html, "html"),
+        body=html,
         attachment=create_calendar_entry(
             summary="[at] Schafkopfen",
             start=start, end=start.replace(hour=23, minute=0),
@@ -40,22 +40,30 @@ def send_schafkopf_meeting_invitation(receivers: List[str], start: datetime, bit
 def send(
     receivers: List[str],
     subject: str,
-    body: MIMEText,
+    body: str,
     attachment: Optional[MIMEBase]=None
 ):
     sender = env.get_gmail_sender_address()
-    message = MIMEMultipart()
-    message['From'] = sender
-    message['To'] = ", ".join(receivers)
-    message['Subject'] = subject
-    message.attach(body)
-    if attachment:
-        message.attach(attachment)
+    receivers += [sender]
 
     smtpserver = smtplib.SMTP_SSL('smtp.gmail.com', 465)
     smtpserver.ehlo()
     smtpserver.login(sender, env.get_gmail_sender_pw())
-    smtpserver.sendmail(sender, receivers, message.as_string())
+    for receiver in receivers:
+        message = MIMEMultipart()
+        message['From'] = sender
+        message['To'] = receiver
+        message['Subject'] = subject
+        message.attach(
+            MIMEText(
+                body.replace('RECEIVER_EMAIL', receiver),
+                "html"
+            )
+        )
+        if attachment:
+            message.attach(attachment)
+        msg = message.as_string()
+        smtpserver.sendmail(sender, receiver, msg)
     smtpserver.close()
 
 

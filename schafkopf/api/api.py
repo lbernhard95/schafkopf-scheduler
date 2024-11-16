@@ -13,11 +13,19 @@ app = FastAPI(
 
 
 @app.post("/subscribe")
-def subscribe_to_schafkopf_rounds(req: SubscribeRequest) ->SubscribeResponse:
+def subscribe_to_schafkopf_rounds(req: SubscribeRequest) -> SubscribeResponse:
     import boto3
     dynamodb = boto3.resource("dynamodb")
     email_table.add(dynamodb, req.to_email_item())
     return SubscribeResponse(email=req.email)
+
+
+@app.delete("/subscriber")
+def delete_subscriber_from_mailing_list(email: str) -> SubscribeResponse:
+    import boto3
+    dynamodb = boto3.resource("dynamodb")
+    email_table.delete(dynamodb, email)
+    return SubscribeResponse(email=email)
 
 
 @app.get("/subscribers/count")

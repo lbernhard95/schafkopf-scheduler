@@ -29,32 +29,41 @@ export type ValidationError = {
     type: string;
 };
 
-export type HelloGetResponse = string;
-
 export type SubscribeToSchafkopfRoundsSubscribePostData = {
     requestBody: SubscribeRequest;
 };
 
 export type SubscribeToSchafkopfRoundsSubscribePostResponse = SubscribeResponse;
 
+export type DeleteSubscriberFromMailingListSubscriberDeleteData = {
+    email: string;
+};
+
+export type DeleteSubscriberFromMailingListSubscriberDeleteResponse = SubscribeResponse;
+
 export type GetSubscriberCountSubscribersCountGetResponse = SubscribeCountResponse;
 
 export type GetPollPollGetResponse = PollResponse;
 
 export type $OpenApiTs = {
-    '/': {
-        get: {
+    '/subscribe': {
+        post: {
+            req: SubscribeToSchafkopfRoundsSubscribePostData;
             res: {
                 /**
                  * Successful Response
                  */
-                200: string;
+                200: SubscribeResponse;
+                /**
+                 * Validation Error
+                 */
+                422: HTTPValidationError;
             };
         };
     };
-    '/subscribe': {
-        post: {
-            req: SubscribeToSchafkopfRoundsSubscribePostData;
+    '/subscriber': {
+        delete: {
+            req: DeleteSubscriberFromMailingListSubscriberDeleteData;
             res: {
                 /**
                  * Successful Response

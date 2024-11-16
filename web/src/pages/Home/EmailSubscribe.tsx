@@ -1,7 +1,7 @@
 // src/Newsletter.tsx
 import React, { useState } from 'react';
 import { TextField, Container, Typography } from '@mui/material';
-import { subscribeToSchafkopfRoundsSubscribePost } from '../client';
+import { subscribeToSchafkopfRoundsSubscribePost } from '../../client';
 import { LoadingButton } from '@mui/lab';
 
 const EmailSubscribe: React.FC = () => {

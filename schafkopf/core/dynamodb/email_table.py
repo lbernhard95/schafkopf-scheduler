@@ -14,6 +14,9 @@ def add(dynamodb, email: EmailItem):
     table = dynamodb.Table("schafkopf_emails")
     table.put_item(Item=json.loads(email.model_dump_json()))
 
+def delete(dynamodb, email: str):
+    table = dynamodb.Table("schafkopf_emails")
+    table.delete_item(Key={"email": email})
 
 def load_all_mails(dynamodb) -> List[str]:
     registered = [i.email for i in load_all(dynamodb)]

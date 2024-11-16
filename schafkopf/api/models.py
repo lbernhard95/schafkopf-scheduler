@@ -18,6 +18,7 @@ class SubscribeRequest(BaseModel):
 class SubscribeResponse(BaseModel):
     email: str
 
+
 class SubscribeCountResponse(BaseModel):
     count: int
 
