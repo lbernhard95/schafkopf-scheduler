@@ -41,7 +41,7 @@ def subscribe_to_schafkopf_rounds(req: SubscribeRequest) -> SubscribeResponse:
 def delete_subscriber_from_mailing_list(email: str) -> SubscribeResponse:
     import boto3
     dynamodb = boto3.resource("dynamodb")
-    email_table.delete(dynamodb, email)
+    email_table.delete(dynamodb, email.lower())
     return SubscribeResponse(email=email)
 
 

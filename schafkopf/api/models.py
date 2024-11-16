@@ -12,7 +12,7 @@ class SubscribeRequest(BaseModel):
     email: str
 
     def to_email_item(self) -> EmailItem:
-        return EmailItem(email=self.email)
+        return EmailItem(email=self.email.lower())
 
 
 class SubscribeResponse(BaseModel):
