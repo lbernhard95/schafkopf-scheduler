@@ -7,6 +7,13 @@ resource "aws_lambda_function" "api" {
   memory_size      = 512
 
   role = aws_iam_role.api.arn
+
+  environment {
+    variables = {
+      GMAIL_SENDER_ADDRESS = var.gmail_sender_address
+      GMAIL_SENDER_PASSWORD = var.gmail_sender_password
+    }
+  }
 }
 
 resource "aws_iam_role" "api" {

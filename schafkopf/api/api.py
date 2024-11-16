@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 
 from schafkopf.api.models import SubscribeRequest, SubscribeResponse, PollResponse, SubscribeCountResponse
+from schafkopf.core import gmail, bitpoll
 from schafkopf.core.dynamodb import email_table, poll_table
 
 app = FastAPI(
@@ -17,6 +18,22 @@ def subscribe_to_schafkopf_rounds(req: SubscribeRequest) -> SubscribeResponse:
     import boto3
     dynamodb = boto3.resource("dynamodb")
     email_table.add(dynamodb, req.to_email_item())
+
+    poll = poll_table.load(dynamodb)
+    poll_id = bitpoll.get_website_from_poll_id(poll.running_poll_id)
+    if poll.poll_is_running():
+        print("Send invite email with poll link")
+        gmail.send_welcome_with_running_bitpoll(
+            receiver=req.email,
+            bitpoll_link=poll_id,
+        )
+    else:
+        print('Send invite email with next date')
+        gmail.send_welcome_with_meeting_invitation(
+            receiver=req.email,
+            start=poll.next_schafkopf_event,
+            bitpoll_link=poll_id
+        )
     return SubscribeResponse(email=req.email)
 
 

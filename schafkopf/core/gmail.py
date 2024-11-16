@@ -21,6 +21,16 @@ def send_bitpoll_invitation(receivers: List[str], bitpoll_link: str):
     )
 
 
+def send_welcome_with_running_bitpoll(receiver: str, bitpoll_link: str):
+    html = load_html_template(f"{env.BASE_PATH}/templates/welcome_with_poll_running.html")
+    html = html.replace("YOUR_BITPOLL_LINK_HERE", bitpoll_link)
+
+    send(
+        receivers=[receiver],
+        subject="Welcome to our Schafkopf Round",
+        body=html
+    )
+
 def send_schafkopf_meeting_invitation(receivers: List[str], start: datetime, bitpoll_link: str):
     html = load_html_template(f"{env.BASE_PATH}/templates/schafkopf_scheduled.html")
     html = html.replace("SCHEDULED_DATE_PLACEHOLDER", format_datetime(start))
@@ -32,7 +42,22 @@ def send_schafkopf_meeting_invitation(receivers: List[str], start: datetime, bit
         body=html,
         attachment=create_calendar_entry(
             summary="[at] Schafkopfen",
-            start=start, end=start.replace(hour=23, minute=0),
+            start=start,
+        )
+    )
+
+def send_welcome_with_meeting_invitation(receiver: str, start: datetime, bitpoll_link: str):
+    html = load_html_template(f"{env.BASE_PATH}/templates/welcome_with_event_scheduled.html")
+    html = html.replace("SCHEDULED_DATE_PLACEHOLDER", format_datetime(start))
+    html = html.replace("YOUR_BITPOLL_LINK_HERE", bitpoll_link)
+
+    send(
+        receivers=[receiver],
+        subject="Welcome to our Schafkopf Round",
+        body=html,
+        attachment=create_calendar_entry(
+            summary="[at] Schafkopfen",
+            start=start
         )
     )
 
@@ -67,7 +92,7 @@ def send(
     smtpserver.close()
 
 
-def create_calendar_entry(start: datetime, end: datetime, summary: str) -> MIMEBase:
+def create_calendar_entry(start: datetime, summary: str) -> MIMEBase:
     ics_content = f"""BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Schafkopf Scheduler//[at] Schafkopf
@@ -75,7 +100,7 @@ BEGIN:VEVENT
 UID:{env.get_gmail_sender_address()}
 DTSTAMP:{datetime.now().strftime('%Y%m%dT%H%M%SZ')}
 DTSTART:{start.strftime('%Y%m%dT%H%M%SZ')}
-DTEND:{end.strftime('%Y%m%dT%H%M%SZ')}
+DTEND:{start.replace(hour=23, minute=0).strftime('%Y%m%dT%H%M%SZ')}
 SUMMARY:[at] Schafkopfen
 DESCRIPTION:{summary}
 END:VEVENT
