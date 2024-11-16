@@ -66,6 +66,7 @@ resource "aws_iam_policy" "api" {
         "Action": [
             "dynamodb:PutItem",
             "dynamodb:UpdateItem",
+            "dynamodb:DeleteItem",
         ],
         "Resource": var.dynamodb_email_arn,
       }

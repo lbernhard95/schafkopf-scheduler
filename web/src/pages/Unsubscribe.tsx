@@ -20,8 +20,8 @@ const Home: React.FC = () => {
             alignItems="center"
             justifyContent="center">
             {loading ? <CircularProgress />
-                : !unsubscribed ? <div><CheckCircle color='success' /> <Typography style={{ minHeight: '1em' }}>
-                    Succesfully Unsubscribed! {email}
+                : unsubscribed ? <div><CheckCircle color='success' /> <Typography style={{ minHeight: '1em' }}>
+                    Succesfully Unsubscribed!
                 </Typography></div> : <Typography style={{ minHeight: '1em' }}>
                     Something went wrong :(
                 </Typography>
