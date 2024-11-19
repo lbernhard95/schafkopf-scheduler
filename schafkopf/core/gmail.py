@@ -1,4 +1,3 @@
-import locale
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -119,7 +118,6 @@ END:VCALENDAR
 
 
 def format_datetime(dt: datetime):
-    locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
     weekday_name = dt.strftime('%A')
     month_name = dt.strftime('%B')
     day = dt.day
