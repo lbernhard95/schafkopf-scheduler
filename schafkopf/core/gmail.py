@@ -97,9 +97,9 @@ VERSION:2.0
 PRODID:-//Schafkopf Scheduler//[at] Schafkopf
 BEGIN:VEVENT
 UID:{env.get_gmail_sender_address()}
-DTSTAMP:{datetime.now().strftime('%Y%m%dT%H%M%SZ')}
-DTSTART:{start.strftime('%Y%m%dT%H%M%SZ')}
-DTEND:{start.replace(hour=23, minute=0).strftime('%Y%m%dT%H%M%SZ')}
+DTSTAMP:{datetime.now().strftime('%Y%m%dT%H%M%S')}
+DTSTART:{start.strftime('%Y%m%dT%H%M%S')}
+DTEND:{start.replace(hour=23, minute=0).strftime('%Y%m%dT%H%M%S')}
 SUMMARY:[at] Schafkopfen
 DESCRIPTION:{summary}
 END:VEVENT
