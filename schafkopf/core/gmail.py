@@ -68,7 +68,6 @@ def send(
     attachment: Optional[MIMEBase]=None
 ):
     sender = env.get_gmail_sender_address()
-    receivers += [sender]
 
     smtpserver = smtplib.SMTP_SSL('smtp.gmail.com', 465)
     smtpserver.ehlo()

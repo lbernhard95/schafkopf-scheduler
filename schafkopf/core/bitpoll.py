@@ -1,4 +1,4 @@
-
+import re
 from datetime import datetime
 from typing import List, Optional
 from uuid import uuid4
@@ -85,14 +85,12 @@ def collect_vote_dates(table: bs4.Tag) -> List[VoteDate]:
 
 
 def create_new_poll(csrf_token: str):
-    poll_id = str(uuid4())
-
     data = {
         'csrfmiddlewaretoken': csrf_token,
         'type': 'date',
         'title': "[at] Schafkopfen",
         'random_slug': 'random_slug',
-        'url': poll_id,
+        #'url': poll_id,
         'due_date': '',
         'description': "",
         'anonymous_allowed': 'on',
@@ -103,18 +101,16 @@ def create_new_poll(csrf_token: str):
 
     if response.status_code != 200:
         raise ValueError(response.text)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    edit_path = soup.find("a", {"data-shortcut": "g c"})["href"]
+    poll_id = re.search(r"/poll/([^/]+)/edit/choices/", edit_path).group(1)
     return poll_id
 
 
 def get_valid_csrf_token() -> str:
-    # Start a session to persist cookies across requests
-    session = requests.Session()
-
-    # Step 1: Make an initial GET request to the Bitpoll homepage to get the CSRF token
-    response = session.get(f"{BITPOLL_URL}/", headers=get_headers(None))
+    response = requests.get(f"{BITPOLL_URL}/", headers=get_headers(None))
     response.raise_for_status()  # Ensure the request was successful
 
-    # Step 2: Parse the HTML to find the CSRF token
     soup = BeautifulSoup(response.text, 'html.parser')
     csrf_token = soup.find('input', {'name': 'csrfmiddlewaretoken'})['value']
     return csrf_token

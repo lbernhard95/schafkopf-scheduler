@@ -15,6 +15,10 @@ boto3 = "^1.35.49"
 fastapi = "^0.115.4"
 mangum = "^0.19.0"
 uvicorn = "^0.32.0"
+moto = {extras = ["dynamodb"], version = "^5.0.25"}
+pytest = "^8.3.4"
+responses = "^0.25.3"
+freezegun = "^1.5.1"
 
 
 [build-system]

@@ -20,7 +20,7 @@ def delete(dynamodb, email: str):
 
 def load_all_mails(dynamodb) -> List[str]:
     registered = [i.email for i in load_all(dynamodb)]
-    return list(set(registered + [env.get_gmail_sender_address()]))
+    return list(set(registered))
 
 def count(dynamodb) -> int:
     table = dynamodb.Table("schafkopf_emails")
