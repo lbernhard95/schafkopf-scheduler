@@ -17,7 +17,8 @@ app = FastAPI(
 def subscribe_to_schafkopf_rounds(req: SubscribeRequest) -> SubscribeResponse:
     import boto3
     dynamodb = boto3.resource("dynamodb")
-    email_table.add(dynamodb, req.to_email_item())
+    email_item = req.to_email_item()
+    email_table.add(dynamodb, email_item)
 
     poll = poll_table.load(dynamodb)
     poll_id = bitpoll.get_website_from_poll_id(poll.running_poll_id)
@@ -34,7 +35,7 @@ def subscribe_to_schafkopf_rounds(req: SubscribeRequest) -> SubscribeResponse:
             start=poll.next_schafkopf_event,
             bitpoll_link=poll_id
         )
-    return SubscribeResponse(email=req.email)
+    return SubscribeResponse(email=email_item.email)
 
 
 @app.delete("/subscriber")
@@ -42,7 +43,7 @@ def delete_subscriber_from_mailing_list(email: str) -> SubscribeResponse:
     import boto3
     dynamodb = boto3.resource("dynamodb")
     email_table.delete(dynamodb, email.lower())
-    return SubscribeResponse(email=email)
+    return SubscribeResponse(email=email.lower())
 
 
 @app.get("/subscribers/count")

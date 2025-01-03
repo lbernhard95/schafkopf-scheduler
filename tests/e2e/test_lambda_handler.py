@@ -74,3 +74,27 @@ def test_new_event_date_found(mock_gmail_send):
     )
     mock_receivers = mock_gmail_send.call_args[1]['receivers']
     assert set(mock_receivers) == {'test2@example.com', 'test@example.com'}
+
+
+
+@freeze_time("2023-01-04T00:30:00")
+@mock_aws
+def test_no_new_event_date_found(mock_gmail_send):
+    running_poll_id = "123"
+    mock_dynamodb.create_emails_table()
+    poll_table = mock_dynamodb.create_polls_table()
+    poll_table.add({
+        "uuid": POLL_ITEM_UUID,
+        "running_poll_id": running_poll_id,
+        "start_next_poll_date": datetime(2023, 1, 13, 18, 30),
+        "new_poll_email_sent": datetime(2023, 1, 1, 0, 30),
+    })
+
+    with responses.RequestsMock() as rsps:
+        mock_bitpoll.create_no_event_found_endpoints(rsps, running_poll_id)
+        lambda_handler({}, None)
+
+    poll_item = poll_table.scan()[0]
+    assert poll_item["next_schafkopf_event"] is None
+    assert poll_item["start_next_poll_date"] == "2023-01-13T18:30:00"
+    assert not mock_gmail_send.called
