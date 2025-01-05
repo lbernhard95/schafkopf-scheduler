@@ -52,7 +52,7 @@ class TestFindDayForNextEvent:
             {"date": match_day, "user": "Lukas2", "vote": "fa-check"},
         ]))
 
-        assert day == match_day
+        assert day == datetime(2025, 1, 7, 18, 30)
 
     def test_match_is_selected_based_on_probability(self):
         high_prop_day = "2025-01-06"
@@ -68,7 +68,7 @@ class TestFindDayForNextEvent:
             {"date": "2025-01-07", "user": "Lukas4", "vote": "fa-check"},
             {"date": "2025-01-07", "user": "Lukas5", "vote": "fa-thumbs-down"},
         ]))
-        assert day == high_prop_day
+        assert day == datetime(2025, 1, 6, 18, 30)
 
 
 class TestGetListOfAttandees:

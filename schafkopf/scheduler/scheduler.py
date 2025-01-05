@@ -1,8 +1,4 @@
 from datetime import datetime, timedelta
-from typing import List, Optional
-
-from schafkopf.core.bitpoll import VoteDate
-
 
 
 def generate_working_days_for_next_weeks(weeks: int):
@@ -17,12 +13,3 @@ def generate_working_days_for_next_weeks(weeks: int):
     return working_days
 
 
-
-def find_best_date(votes: List[VoteDate]) -> Optional[VoteDate]:
-    eligible_votes = [vote for vote in votes if vote.yes_count >= 4]
-    if not eligible_votes:
-        return None
-    return max(
-        eligible_votes, 
-        key=lambda vote: vote.attendance_probability
-    )

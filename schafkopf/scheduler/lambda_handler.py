@@ -57,19 +57,20 @@ def schedule_next_schafkopf_event(emails: List[str], poll: PollItem) -> PollItem
     poll_website = bitpoll.get_website_from_poll_id(poll.running_poll_id)
     print("Try to schedule next schafkopf event for:", poll_website)
     voting_table = bitpoll.get_voting_table(poll_id=poll.running_poll_id)
-    votes = bitpoll.collect_vote_dates(voting_table)
-    best_vote = scheduler.find_best_date(votes)
-    print("Most promising vote:", best_vote)
+    votes_df = bitpoll.parse_votes(voting_table)
+    next_event = bitpoll.find_day_for_next_event(votes_df)
+    print("Most promising date:", next_event)
 
-    if best_vote:
+    if next_event:
         print("Found valid date, sending out invitation")
-        best_date = best_vote.date
+        attendees = bitpoll.get_list_of_attendees(votes_df, next_event)
         gmail.send_schafkopf_meeting_invitation(
             receivers=emails,
-            start=best_date,
+            attendees=attendees,
+            start=next_event,
             bitpoll_link=poll_website
         )
-        poll.event_scheduled_update(event_date=best_date)
+        poll.event_scheduled_update(event_date=next_event)
     return poll
 
 

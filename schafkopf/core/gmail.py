@@ -30,10 +30,11 @@ def send_welcome_with_running_bitpoll(receiver: str, bitpoll_link: str):
         body=html
     )
 
-def send_schafkopf_meeting_invitation(receivers: List[str], start: datetime, bitpoll_link: str):
+def send_schafkopf_meeting_invitation(receivers: List[str], attendees: List[str], start: datetime, bitpoll_link: str):
     html = load_html_template(f"{env.BASE_PATH}/templates/schafkopf_scheduled.html")
     html = html.replace("SCHEDULED_DATE_PLACEHOLDER", format_datetime(start))
     html = html.replace("YOUR_BITPOLL_LINK_HERE", bitpoll_link)
+    html = html.replace("ATTENDEE_LIST_PLACEHOLDER", "\n".join(f"<li>{a}</li>" for a in attendees))
 
     send(
         receivers=receivers,
