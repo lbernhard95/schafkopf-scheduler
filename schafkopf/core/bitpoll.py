@@ -1,14 +1,84 @@
 import re
 from datetime import datetime
+from enum import Enum
 from typing import List, Optional
 from uuid import uuid4
 
 import bs4
+import pandas as pd
 from pydantic import BaseModel, computed_field
 import requests
 from bs4 import BeautifulSoup
 
 BITPOLL_URL = 'https://bitpoll.de'
+
+class VoteDayResult(BaseModel):
+    date: datetime
+    yes_count: int
+    no_count: int
+    probably_yes_count: int
+    probably_no_count: int
+
+    @computed_field
+    @property
+    def attendance_probability(self) -> float:
+        return (
+            self.yes_count * 100 +
+            self.no_count * 0 +
+            self.probably_no_count * 25 +
+            self.probably_yes_count * 50
+        ) / self.participation_count
+
+    @computed_field
+    @property
+    def participation_count(self) -> int:
+        return self.yes_count + self.no_count + self.probably_no_count + self.probably_yes_count
+
+def parse_votes(table: bs4.Tag) -> pd.DataFrame:
+    votes = []
+    for row in table.select('tr.vote'):
+        user = row.select_one('td.author').get_text(strip=True)
+        for cell in row.select('td.vote-choice'):
+            date = cell['data-title'].split()[0]  # Extract only the date part
+            vote_icon = cell.select_one('span.fa')
+            if vote_icon:
+                vote_type = vote_icon['class'][2]  # Assuming format like 'fa fa-check'
+                votes.append({
+                    'date': date,
+                    'user': user,
+                    'vote': vote_type
+                })
+    return pd.DataFrame(votes)
+
+def find_day_for_next_event(df: pd.DataFrame) -> Optional[str]:
+    # Define the vote weights
+    vote_weights = {
+        "fa-check": 100,
+        "fa-ban": 0,
+        "fa-question": 50,
+        "fa-thumbs-down": 25
+    }
+
+    # Group by date and calculate the required metrics
+    grouped = df.groupby('date').agg(
+        yes_count=('vote', lambda x: (x == 'fa-check').sum()),
+        attendance_probability=('vote', lambda x: sum(vote_weights[v] for v in x) / len(x))
+    ).reset_index()
+
+    # Filter dates with at least 4 "fa-check" votes
+    filtered = grouped[grouped['yes_count'] >= 4]
+
+    # Select the date with the highest attendance probability
+    if filtered.empty:
+        return None
+    best_day = filtered.loc[filtered['attendance_probability'].idxmax()]['date']
+    return best_day
+
+def get_list_of_attendees(df: pd.DataFrame, date: str) -> List[str]:
+    return df[
+        (df['date'] == date) &
+        (df['vote'] == 'fa-check')
+    ]['user'].tolist()
 
 class VoteDate(BaseModel):
     date: datetime
