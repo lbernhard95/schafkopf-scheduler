@@ -20,7 +20,7 @@ resource "aws_dynamodb_table" "polls" {
   }
 }
 
-resource "aws_dynamodb_table" "polls" {
+resource "aws_dynamodb_table" "scheduler" {
   name         = "schafkopf_scheduler"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "partition_key"
