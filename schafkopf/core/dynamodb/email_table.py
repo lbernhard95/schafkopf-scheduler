@@ -11,8 +11,8 @@ class EmailItem(BaseModel):
 
 
 def add(dynamodb, email: EmailItem):
-    if not env.on_aws():
-        print(f"Not on AWS, not adding: {email}")
+    if env.read_only():
+        print(f"Read only, not adding: {email}")
         return
     table = dynamodb.Table("schafkopf_emails")
     table.put_item(Item=json.loads(email.model_dump_json()))
