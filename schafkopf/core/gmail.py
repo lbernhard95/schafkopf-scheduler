@@ -68,6 +68,9 @@ def send(
     body: str,
     attachment: Optional[MIMEBase]=None
 ):
+    if env.read_only():
+        print(f"Read only, not sending email '{subject}' to {receivers}")
+        return
     sender = env.get_gmail_sender_address()
 
     smtpserver = smtplib.SMTP_SSL('smtp.gmail.com', 465)

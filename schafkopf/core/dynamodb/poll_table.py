@@ -4,6 +4,8 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from schafkopf.core import env
+
 POLL_ITEM_UUID = '021dae01-ac37-4c3c-bc6c-952d3e4a57d5'
 
 
@@ -53,6 +55,9 @@ def load(dynamodb) -> PollItem:
         )
 
 def update(dynamodb, poll_item: PollItem):
+    if env.read_only():
+        print(f"Read only, not updating: {poll_item}")
+        return
     table = dynamodb.Table("schafkopf_polls")
     item_dict = json.loads(poll_item.model_dump_json())
     item_dict['uuid'] = POLL_ITEM_UUID
