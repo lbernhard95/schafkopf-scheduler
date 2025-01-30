@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 from schafkopf.core import env
 
-POLL_ITEM_UUID = '021dae01-ac37-4c3c-bc6c-952d3e4a57d5'
+POLL_ITEM_UUID = "021dae01-ac37-4c3c-bc6c-952d3e4a57d5"
 
 
 class PollItem(BaseModel):
@@ -21,7 +21,7 @@ class PollItem(BaseModel):
             running_poll_id=poll_id,
             start_next_poll_date=next_poll_date,
             new_poll_email_sent=datetime.now(),
-            next_schafkopf_event=None
+            next_schafkopf_event=None,
         )
 
     def event_scheduled_update(self, event_date: datetime):
@@ -30,9 +30,9 @@ class PollItem(BaseModel):
 
     def poll_is_running(self) -> bool:
         return (
-            self.running_poll_id and
-            not self.is_time_to_start_new_poll() and
-            self.next_schafkopf_event is None
+            self.running_poll_id
+            and not self.is_time_to_start_new_poll()
+            and self.next_schafkopf_event is None
         )
 
     def is_time_to_start_new_poll(self) -> bool:
@@ -44,15 +44,14 @@ def load(dynamodb) -> PollItem:
         table = dynamodb.Table("schafkopf_polls")
         response = table.query(
             KeyConditionExpression=f"#u = :a",
-            ExpressionAttributeNames={'#u': "uuid"},
+            ExpressionAttributeNames={"#u": "uuid"},
             ExpressionAttributeValues={":a": POLL_ITEM_UUID},
             Limit=1,
         )
         return PollItem(**response["Items"][0])
     except Exception as e:
-        raise ValueError(
-            f"Could not find poll item", e
-        )
+        raise ValueError(f"Could not find poll item", e)
+
 
 def update(dynamodb, poll_item: PollItem):
     if env.read_only():
@@ -60,5 +59,5 @@ def update(dynamodb, poll_item: PollItem):
         return
     table = dynamodb.Table("schafkopf_polls")
     item_dict = json.loads(poll_item.model_dump_json())
-    item_dict['uuid'] = POLL_ITEM_UUID
+    item_dict["uuid"] = POLL_ITEM_UUID
     table.put_item(Item=item_dict)

@@ -13,28 +13,27 @@ def send_bitpoll_invitation(receivers: List[str], bitpoll_link: str):
     html = load_html_template(f"{env.BASE_PATH}/templates/poll_invitation.html")
     html = html.replace("YOUR_BITPOLL_LINK_HERE", bitpoll_link)
 
-    send(
-        receivers=receivers,
-        subject="New Schafkopf Round",
-        body=html
-    )
+    send(receivers=receivers, subject="New Schafkopf Round", body=html)
 
 
 def send_welcome_with_running_bitpoll(receiver: str, bitpoll_link: str):
-    html = load_html_template(f"{env.BASE_PATH}/templates/welcome_with_poll_running.html")
+    html = load_html_template(
+        f"{env.BASE_PATH}/templates/welcome_with_poll_running.html"
+    )
     html = html.replace("YOUR_BITPOLL_LINK_HERE", bitpoll_link)
 
-    send(
-        receivers=[receiver],
-        subject="Welcome to our Schafkopf Round",
-        body=html
-    )
+    send(receivers=[receiver], subject="Welcome to our Schafkopf Round", body=html)
 
-def send_schafkopf_meeting_invitation(receivers: List[str], attendees: List[str], start: datetime, bitpoll_link: str):
+
+def send_schafkopf_meeting_invitation(
+    receivers: List[str], attendees: List[str], start: datetime, bitpoll_link: str
+):
     html = load_html_template(f"{env.BASE_PATH}/templates/schafkopf_scheduled.html")
     html = html.replace("SCHEDULED_DATE_PLACEHOLDER", format_datetime(start))
     html = html.replace("YOUR_BITPOLL_LINK_HERE", bitpoll_link)
-    html = html.replace("ATTENDEE_LIST_PLACEHOLDER", "\n".join(f"<li>{a}</li>" for a in attendees))
+    html = html.replace(
+        "ATTENDEE_LIST_PLACEHOLDER", "\n".join(f"<li>{a}</li>" for a in attendees)
+    )
 
     send(
         receivers=receivers,
@@ -43,11 +42,16 @@ def send_schafkopf_meeting_invitation(receivers: List[str], attendees: List[str]
         attachment=create_calendar_entry(
             summary="[at] Schafkopfen",
             start=start,
-        )
+        ),
     )
 
-def send_welcome_with_meeting_invitation(receiver: str, start: datetime, bitpoll_link: str):
-    html = load_html_template(f"{env.BASE_PATH}/templates/welcome_with_event_scheduled.html")
+
+def send_welcome_with_meeting_invitation(
+    receiver: str, start: datetime, bitpoll_link: str
+):
+    html = load_html_template(
+        f"{env.BASE_PATH}/templates/welcome_with_event_scheduled.html"
+    )
     html = html.replace("SCHEDULED_DATE_PLACEHOLDER", format_datetime(start))
     html = html.replace("YOUR_BITPOLL_LINK_HERE", bitpoll_link)
 
@@ -55,38 +59,27 @@ def send_welcome_with_meeting_invitation(receiver: str, start: datetime, bitpoll
         receivers=[receiver],
         subject="Welcome to our Schafkopf Round",
         body=html,
-        attachment=create_calendar_entry(
-            summary="[at] Schafkopfen",
-            start=start
-        )
+        attachment=create_calendar_entry(summary="[at] Schafkopfen", start=start),
     )
 
 
 def send(
-    receivers: List[str],
-    subject: str,
-    body: str,
-    attachment: Optional[MIMEBase]=None
+    receivers: List[str], subject: str, body: str, attachment: Optional[MIMEBase] = None
 ):
     if env.read_only():
         print(f"Read only, not sending email '{subject}' to {receivers}")
         return
     sender = env.get_gmail_sender_address()
 
-    smtpserver = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+    smtpserver = smtplib.SMTP_SSL("smtp.gmail.com", 465)
     smtpserver.ehlo()
     smtpserver.login(sender, env.get_gmail_sender_pw())
     for receiver in receivers:
         message = MIMEMultipart()
-        message['From'] = sender
-        message['To'] = receiver
-        message['Subject'] = subject
-        message.attach(
-            MIMEText(
-                body.replace('RECEIVER_EMAIL', receiver),
-                "html"
-            )
-        )
+        message["From"] = sender
+        message["To"] = receiver
+        message["Subject"] = subject
+        message.attach(MIMEText(body.replace("RECEIVER_EMAIL", receiver), "html"))
         if attachment:
             message.attach(attachment)
         msg = message.as_string()
@@ -113,27 +106,24 @@ END:VCALENDAR
     part = MIMEBase("application", "octet-stream")
     part.set_payload(ics_content.encode("utf-8"))
     encoders.encode_base64(part)
-    part.add_header(
-        "Content-Disposition",
-        f"attachment; filename=schafkopfen.ics"
-    )
+    part.add_header("Content-Disposition", f"attachment; filename=schafkopfen.ics")
     return part
 
 
 def format_datetime(dt: datetime):
-    weekday_name = dt.strftime('%A')
-    month_name = dt.strftime('%B')
+    weekday_name = dt.strftime("%A")
+    month_name = dt.strftime("%B")
     day = dt.day
     if 10 <= day % 100 <= 20:
-        suffix = 'th'
+        suffix = "th"
     else:
-        suffix = {1: 'st', 2: 'nd', 3: 'rd'}.get(day % 10, 'th')
-    
+        suffix = {1: "st", 2: "nd", 3: "rd"}.get(day % 10, "th")
+
     formatted_day = f"{day}{suffix}"
-    formatted_time = dt.strftime('%H:%M')
+    formatted_time = dt.strftime("%H:%M")
     return f"{weekday_name}, {month_name} {formatted_day} at {formatted_time}"
 
 
 def load_html_template(file_path: str) -> str:
-    with open(file_path, encoding='utf-8') as f:
+    with open(file_path, encoding="utf-8") as f:
         return f.read()

@@ -45,19 +45,22 @@ def start_new_poll(subscribed_emails) -> PollItem:
 
     print("Send out email notifications")
     gmail.send_bitpoll_invitation(
-        receivers=subscribed_emails,
-        bitpoll_link=new_poll_website
+        receivers=subscribed_emails, bitpoll_link=new_poll_website
     )
     return PollItem.create_new(
         poll_id=poll_id,
         next_poll_date=max(dates),
     )
 
+
 def schedule_next_schafkopf_event(emails: List[str], poll: PollItem) -> PollItem:
     poll_website = bitpoll.get_website_from_poll_id(poll.running_poll_id)
     print("Try to schedule next schafkopf event for:", poll_website)
     voting_table = bitpoll.get_voting_table(poll_id=poll.running_poll_id)
     votes_df = bitpoll.parse_votes(voting_table)
+    if votes_df.empty:
+        print("No votes found, skip scheduling")
+        return poll
     next_event = bitpoll.find_day_for_next_event(votes_df)
     print("Most promising date:", next_event)
 
@@ -68,11 +71,11 @@ def schedule_next_schafkopf_event(emails: List[str], poll: PollItem) -> PollItem
             receivers=emails,
             attendees=attendees,
             start=next_event,
-            bitpoll_link=poll_website
+            bitpoll_link=poll_website,
         )
         poll.event_scheduled_update(event_date=next_event)
     return poll
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     lambda_handler({}, {})

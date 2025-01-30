@@ -17,6 +17,7 @@ def add(dynamodb, email: EmailItem):
     table = dynamodb.Table("schafkopf_emails")
     table.put_item(Item=json.loads(email.model_dump_json()))
 
+
 def delete(dynamodb, email: str):
     if env.read_only():
         print(f"Read only, not deleting: {email}")
@@ -24,14 +25,17 @@ def delete(dynamodb, email: str):
     table = dynamodb.Table("schafkopf_emails")
     table.delete_item(Key={"email": email})
 
+
 def load_all_mails(dynamodb) -> List[str]:
     registered = [i.email for i in load_all(dynamodb)]
     return list(set(registered))
+
 
 def count(dynamodb) -> int:
     table = dynamodb.Table("schafkopf_emails")
     item_count = table.item_count
     return item_count
+
 
 def load_all(dynamodb) -> List[EmailItem]:
     try:
@@ -49,6 +53,4 @@ def load_all(dynamodb) -> List[EmailItem]:
                 print(f"Could not load {item}: {e}")
         return result
     except Exception as e:
-        raise RuntimeError(
-            f"Could not load emails: {e}"
-        )
+        raise RuntimeError(f"Could not load emails: {e}")

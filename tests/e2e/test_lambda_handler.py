@@ -14,12 +14,14 @@ from tests.e2e import mock_dynamodb, mock_bitpoll
 def test_create_new_poll(mock_gmail_send):
     mock_dynamodb.create_emails_table()
     poll_table = mock_dynamodb.create_polls_table()
-    poll_table.add({
-        "uuid": POLL_ITEM_UUID,
-        "running_poll_id": "123",
-        "start_next_poll_date": datetime(2023, 1, 1, 18, 31),
-        "new_poll_email_sent": datetime(2023, 1, 1, 10, 0),
-    })
+    poll_table.add(
+        {
+            "uuid": POLL_ITEM_UUID,
+            "running_poll_id": "123",
+            "start_next_poll_date": datetime(2023, 1, 1, 18, 31),
+            "new_poll_email_sent": datetime(2023, 1, 1, 10, 0),
+        }
+    )
 
     with responses.RequestsMock() as rsps:
         mock_bitpoll.create_new_poll_endpoints(rsps)
@@ -32,14 +34,11 @@ def test_create_new_poll(mock_gmail_send):
     assert poll_item["next_schafkopf_event"] is None
     assert poll_item["uuid"] == POLL_ITEM_UUID
 
-
     mock_gmail_send.assert_called_with(
-        receivers=ANY,
-        subject="New Schafkopf Round",
-        body=ANY
+        receivers=ANY, subject="New Schafkopf Round", body=ANY
     )
-    mock_receivers = mock_gmail_send.call_args[1]['receivers']
-    assert set(mock_receivers) == {'test2@example.com', 'test@example.com'}
+    mock_receivers = mock_gmail_send.call_args[1]["receivers"]
+    assert set(mock_receivers) == {"test2@example.com", "test@example.com"}
 
 
 @freeze_time("2023-01-04T00:30:00")
@@ -48,12 +47,14 @@ def test_new_event_date_found(mock_gmail_send):
     running_poll_id = "123"
     mock_dynamodb.create_emails_table()
     poll_table = mock_dynamodb.create_polls_table()
-    poll_table.add({
-        "uuid": POLL_ITEM_UUID,
-        "running_poll_id": running_poll_id,
-        "start_next_poll_date": datetime(2023, 1, 13, 18, 30),
-        "new_poll_email_sent": datetime(2023, 1, 1, 0, 30),
-    })
+    poll_table.add(
+        {
+            "uuid": POLL_ITEM_UUID,
+            "running_poll_id": running_poll_id,
+            "start_next_poll_date": datetime(2023, 1, 13, 18, 30),
+            "new_poll_email_sent": datetime(2023, 1, 1, 0, 30),
+        }
+    )
 
     with responses.RequestsMock() as rsps:
         mock_bitpoll.create_event_found_endpoints(rsps, running_poll_id)
@@ -65,20 +66,15 @@ def test_new_event_date_found(mock_gmail_send):
     assert poll_item["start_next_poll_date"] == "2023-01-11T18:30:00"
     assert poll_item["uuid"] == POLL_ITEM_UUID
 
-
     mock_gmail_send.assert_called_with(
-        receivers=ANY,
-        subject="Schafkopfen on 09.01",
-        body=ANY,
-        attachment=ANY
+        receivers=ANY, subject="Schafkopfen on 09.01", body=ANY, attachment=ANY
     )
     mock_args = mock_gmail_send.call_args[1]
-    assert set(mock_args['receivers']) == {'test2@example.com', 'test@example.com'}
-    assert "Lukas2" in mock_args['body']
-    assert "Lukas3" in mock_args['body']
-    assert "Lukas4" in mock_args['body']
-    assert "Lukas6" in mock_args['body']
-
+    assert set(mock_args["receivers"]) == {"test2@example.com", "test@example.com"}
+    assert "Lukas2" in mock_args["body"]
+    assert "Lukas3" in mock_args["body"]
+    assert "Lukas4" in mock_args["body"]
+    assert "Lukas6" in mock_args["body"]
 
 
 @freeze_time("2023-01-04T00:30:00")
@@ -87,12 +83,14 @@ def test_no_new_event_date_found(mock_gmail_send):
     running_poll_id = "123"
     mock_dynamodb.create_emails_table()
     poll_table = mock_dynamodb.create_polls_table()
-    poll_table.add({
-        "uuid": POLL_ITEM_UUID,
-        "running_poll_id": running_poll_id,
-        "start_next_poll_date": datetime(2023, 1, 13, 18, 30),
-        "new_poll_email_sent": datetime(2023, 1, 1, 0, 30),
-    })
+    poll_table.add(
+        {
+            "uuid": POLL_ITEM_UUID,
+            "running_poll_id": running_poll_id,
+            "start_next_poll_date": datetime(2023, 1, 13, 18, 30),
+            "new_poll_email_sent": datetime(2023, 1, 1, 0, 30),
+        }
+    )
 
     with responses.RequestsMock() as rsps:
         mock_bitpoll.create_no_event_found_endpoints(rsps, running_poll_id)

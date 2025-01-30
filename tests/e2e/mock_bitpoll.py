@@ -11,7 +11,7 @@ def create_new_poll_endpoints(rsps: responses.RequestsMock):
         body=f"""
         <html>
             <input type="hidden" name="csrfmiddlewaretoken" value="{TEST_CSRF_TOKEN}">
-        </html>"""
+        </html>""",
     )
     rsps.add(
         responses.POST,
@@ -19,12 +19,12 @@ def create_new_poll_endpoints(rsps: responses.RequestsMock):
         body=f"""
         <html>
             <a data-shortcut="g c" href="/poll/{NEW_POLL_ID}/edit/choices/"></a>
-        </html>"""
+        </html>""",
     )
     rsps.add(
         responses.POST,
         f"https://bitpoll.de/poll/{NEW_POLL_ID}/edit/choices/date/",
-        body="ok"
+        body="ok",
     )
 
 
@@ -152,9 +152,8 @@ def create_event_found_endpoints(rsps: responses.RequestsMock, poll_id: str):
       </tr>
    </tbody>
 </table>
-        """
+        """,
     )
-
 
 
 def create_no_event_found_endpoints(rsps: responses.RequestsMock, poll_id: str):
@@ -201,5 +200,5 @@ def create_no_event_found_endpoints(rsps: responses.RequestsMock, poll_id: str):
                     </tr>
                 </tfoot>
             </table>
-        </html>"""
+        </html>""",
     )

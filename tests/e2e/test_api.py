@@ -15,12 +15,14 @@ from schafkopf.core.dynamodb.poll_table import POLL_ITEM_UUID
 def test_subscribe_to_new_schafkopf_rounds_(mock_gmail_send):
     mail_table = mock_dynamodb.create_emails_table()
     poll_table = mock_dynamodb.create_polls_table()
-    poll_table.add({
-        "uuid": POLL_ITEM_UUID,
-        "running_poll_id": "123",
-        "start_next_poll_date": datetime(2023, 1, 15, 18, 30),
-        "new_poll_email_sent": datetime(2023, 1, 1, 10, 0),
-    })
+    poll_table.add(
+        {
+            "uuid": POLL_ITEM_UUID,
+            "running_poll_id": "123",
+            "start_next_poll_date": datetime(2023, 1, 15, 18, 30),
+            "new_poll_email_sent": datetime(2023, 1, 1, 10, 0),
+        }
+    )
 
     rsp = TestClient(app).post("/subscribe", json={"email": "NEW-test@email.com"})
 
@@ -31,12 +33,8 @@ def test_subscribe_to_new_schafkopf_rounds_(mock_gmail_send):
     assert {"email": "new-test@email.com"} in mails
     assert len(mails) == 3
     mock_gmail_send.assert_called_with(
-        receivers=ANY,
-        subject="Welcome to our Schafkopf Round",
-        body=ANY
+        receivers=ANY, subject="Welcome to our Schafkopf Round", body=ANY
     )
-
-
 
 
 @mock_aws
@@ -64,15 +62,18 @@ def test_get_subscriber_count(mock_gmail_send):
     assert rsp.json()["count"] == len(mails)
     assert len(mails) == 2
 
+
 @mock_aws
 def test_get_poll():
     poll_table = mock_dynamodb.create_polls_table()
-    poll_table.add({
-        "uuid": POLL_ITEM_UUID,
-        "running_poll_id": "123",
-        "start_next_poll_date": datetime(2023, 1, 1, 18, 31),
-        "new_poll_email_sent": datetime(2023, 1, 1, 10, 0),
-    })
+    poll_table.add(
+        {
+            "uuid": POLL_ITEM_UUID,
+            "running_poll_id": "123",
+            "start_next_poll_date": datetime(2023, 1, 1, 18, 31),
+            "new_poll_email_sent": datetime(2023, 1, 1, 10, 0),
+        }
+    )
 
     rsp = TestClient(app).get("/poll")
 
@@ -81,5 +82,5 @@ def test_get_poll():
         "bitpoll_link": "https://bitpoll.de/poll/123",
         "start_next_poll_date": "2023-01-01T18:31:00",
         "next_schafkopf_event": None,
-        "current_poll_started": "2023-01-01T10:00:00"
+        "current_poll_started": "2023-01-01T10:00:00",
     }

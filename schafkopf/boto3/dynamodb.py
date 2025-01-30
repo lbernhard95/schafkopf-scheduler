@@ -31,7 +31,8 @@ class DynamoDBTable:
         return self.table.item_count
 
     def query(
-        self, key_condition: str,
+        self,
+        key_condition: str,
         expression_names: Optional[Dict] = None,
         expression_values: Optional[Dict] = None,
         filter_expression: Optional[str] = None,
@@ -56,7 +57,9 @@ class DynamoDBTable:
             response = self.table.scan()
             items = response["Items"]
             while "LastEvaluatedKey" in response:
-                response = self.table.scan(ExclusiveStartKey=response["LastEvaluatedKey"])
+                response = self.table.scan(
+                    ExclusiveStartKey=response["LastEvaluatedKey"]
+                )
                 items.extend(response["Items"])
             result = []
             for item in items:
@@ -66,6 +69,4 @@ class DynamoDBTable:
                     print(f"Could not load {item}: {e}")
             return result
         except Exception as e:
-            raise RuntimeError(
-                f"Could not load items from {self.table_name}: {e}"
-            )
+            raise RuntimeError(f"Could not load items from {self.table_name}: {e}")

@@ -2,7 +2,12 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from fastapi import FastAPI
 
-from schafkopf.api.models import SubscribeRequest, SubscribeResponse, PollResponse, SubscribeCountResponse
+from schafkopf.api.models import (
+    SubscribeRequest,
+    SubscribeResponse,
+    PollResponse,
+    SubscribeCountResponse,
+)
 from schafkopf.core import gmail, bitpoll
 from schafkopf.core.dynamodb import email_table, poll_table
 
@@ -16,6 +21,7 @@ app = FastAPI(
 @app.post("/subscribe")
 def subscribe_to_schafkopf_rounds(req: SubscribeRequest) -> SubscribeResponse:
     import boto3
+
     dynamodb = boto3.resource("dynamodb")
     email_item = req.to_email_item()
     email_table.add(dynamodb, email_item)
@@ -29,11 +35,9 @@ def subscribe_to_schafkopf_rounds(req: SubscribeRequest) -> SubscribeResponse:
             bitpoll_link=poll_id,
         )
     else:
-        print('Send invite email with next date')
+        print("Send invite email with next date")
         gmail.send_welcome_with_meeting_invitation(
-            receiver=req.email,
-            start=poll.next_schafkopf_event,
-            bitpoll_link=poll_id
+            receiver=req.email, start=poll.next_schafkopf_event, bitpoll_link=poll_id
         )
     return SubscribeResponse(email=email_item.email)
 
@@ -41,6 +45,7 @@ def subscribe_to_schafkopf_rounds(req: SubscribeRequest) -> SubscribeResponse:
 @app.delete("/subscriber")
 def delete_subscriber_from_mailing_list(email: str) -> SubscribeResponse:
     import boto3
+
     dynamodb = boto3.resource("dynamodb")
     email_table.delete(dynamodb, email.lower())
     return SubscribeResponse(email=email.lower())
@@ -49,14 +54,15 @@ def delete_subscriber_from_mailing_list(email: str) -> SubscribeResponse:
 @app.get("/subscribers/count")
 def get_subscriber_count() -> SubscribeCountResponse:
     import boto3
+
     dynamodb = boto3.resource("dynamodb")
-    return SubscribeCountResponse(
-        count=email_table.count(dynamodb)
-    )
+    return SubscribeCountResponse(count=email_table.count(dynamodb))
+
 
 @app.get("/poll")
 def get_poll() -> PollResponse:
     import boto3
+
     dynamodb = boto3.resource("dynamodb")
     poll_item = poll_table.load(dynamodb)
     return PollResponse.from_item(poll_item)
@@ -73,6 +79,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run("schafkopf.api.api:app", port=8000, log_level="info", reload=True)
