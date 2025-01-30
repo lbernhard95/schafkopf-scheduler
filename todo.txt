@@ -1,0 +1,5 @@
+deploy only dynamodb.tf first
+adjust tests
+test locally
+migrate
+deploy

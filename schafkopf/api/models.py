@@ -3,16 +3,14 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from schafkopf.core import bitpoll
-from schafkopf.core.dynamodb.email_table import EmailItem
-from schafkopf.core.dynamodb.poll_table import PollItem
-
+from schafkopf.boto3.email import Subscriber
+from schafkopf.boto3.poll import Poll
 
 class SubscribeRequest(BaseModel):
     email: str
 
-    def to_email_item(self) -> EmailItem:
-        return EmailItem(email=self.email.lower())
+    def to_subscriber(self) -> Subscriber:
+        return Subscriber(email=self.email)
 
 
 class SubscribeResponse(BaseModel):
@@ -30,10 +28,10 @@ class PollResponse(BaseModel):
 
 
     @staticmethod
-    def from_item(item: PollItem) -> "PollResponse":
+    def from_item(item: Poll) -> "PollResponse":
         return PollResponse(
-            bitpoll_link=bitpoll.get_website_from_poll_id(item.running_poll_id),
-            next_schafkopf_event=item.next_schafkopf_event,
-            start_next_poll_date=item.start_next_poll_date,
-            current_poll_started=item.new_poll_email_sent
+            bitpoll_link=item.url,
+            next_schafkopf_event=item.upcoming_event,
+            start_next_poll_date=datetime.combine(item.next_poll_day, datetime.min.time()),
+            current_poll_started=item.poll_created
         )

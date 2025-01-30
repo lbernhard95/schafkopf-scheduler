@@ -35,8 +35,8 @@ class VoteDayResult(BaseModel):
         return self.yes_count + self.no_count + self.probably_no_count + self.probably_yes_count
 
 
-def get_voting_table(poll_id: str) -> bs4.Tag:
-    rsp = requests.get(get_website_from_poll_id(poll_id))
+def get_voting_table(url: str) -> bs4.Tag:
+    rsp = requests.get(url)
     page = BeautifulSoup(rsp.text, features="html.parser")
     return page.find('table', id='poll')
 

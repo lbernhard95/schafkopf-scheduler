@@ -36,3 +36,14 @@ resource "aws_dynamodb_table" "scheduler" {
     type = "S"
   }
 }
+
+resource "aws_dynamodb_table" "subscriber" {
+  name         = "schafkopf_subscriber"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "partition_key"
+
+  attribute {
+    name = "partition_key"
+    type = "S"
+  }
+}

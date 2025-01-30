@@ -6,6 +6,8 @@ from typing import List, Dict, Optional, Literal, Union
 
 from pydantic import BaseModel
 
+from schafkopf.core import env
+
 
 class DynamoDBTable:
     def __init__(self, table_name: str):
@@ -13,11 +15,23 @@ class DynamoDBTable:
         self.table = boto3.resource("dynamodb").Table(table_name)
 
     def add(self, item: Union[Dict, BaseModel]):
+        if env.read_only():
+            print(f"Read only, not adding: {item}")
+            return
         if isinstance(item, BaseModel):
             item = item.model_dump()
         self.table.put_item(Item=json.loads(json.dumps(item, default=str)))
 
+    def update(self, item: Union[Dict, BaseModel]):
+        if env.read_only():
+            print(f"Read only, not updating: {item}")
+            return
+        self.add(item)
+
     def add_many(self, items: List[Union[Dict, BaseModel]]):
+        if env.read_only():
+            print(f"Read only, not adding: {items}")
+            return
         with self.table.batch_writer() as batch:
             for item in items:
                 if isinstance(item, BaseModel):
@@ -25,6 +39,9 @@ class DynamoDBTable:
                 batch.put_item(Item=item)
 
     def delete(self, key: Dict):
+        if env.read_only():
+            print(f"Read only, not deleting: {key}")
+            return
         self.table.delete_item(Key=key)
 
     def count(self) -> int:
@@ -32,21 +49,14 @@ class DynamoDBTable:
 
     def query(
         self, key_condition: str,
-        expression_names: Optional[Dict] = None,
         expression_values: Optional[Dict] = None,
-        filter_expression: Optional[str] = None,
-        scan_index: Literal["forwards", "backwards"] = "forward",
-        projection_expression: Optional[str] = None,
+        scan_index: Literal["forwards", "backwards"] = "forwards",
         limit: int = 1,
     ) -> List[Dict]:
-
         response = self.table.query(
             KeyConditionExpression=key_condition,
-            ExpressionAttributeNames=expression_names,
-            ExpressionAttributeValues=expression_values,
-            ScanIndexForward=scan_index == "forward",
-            FilterExpression=filter_expression,
-            ProjectionExpression=projection_expression,
+            ExpressionAttributeValues=expression_values if expression_values else {},
+            ScanIndexForward=scan_index == "forwards",
             Limit=limit,
         )
         return response["Items"]
