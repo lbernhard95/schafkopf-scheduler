@@ -71,11 +71,28 @@ jobs:
         run: |
           docker build -f ./schafkopf/scheduler/Dockerfile -t 082113759242.dkr.ecr.eu-central-1.amazonaws.com/schafkopf-scheduler-lambda:latest .
           docker push 082113759242.dkr.ecr.eu-central-1.amazonaws.com/schafkopf-scheduler-lambda:latest
+  build-beachbooker:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - name: Configure AWS Credentials
+          uses: aws-actions/configure-aws-credentials@v4
+          with:
+            role-to-assume: arn:aws:iam::082113759242:role/github_oidc_role
+            aws-region: eu-central-1
+        - name: Login to Amazon ECR
+          id: login-ecr
+          uses: aws-actions/amazon-ecr-login@v2
+        - name: Build, tag, and push docker image to Amazon ECR
+          run: |
+            docker build -f ./beachbooker/Dockerfile -t 082113759242.dkr.ecr.eu-central-1.amazonaws.com/beachbooker-lambda:latest .
+            docker push 082113759242.dkr.ecr.eu-central-1.amazonaws.com/beachbooker-lambda:latest
   deploy:
     runs-on: ubuntu-latest
     needs:
       - build-scheduler
       - build-api
+      - build-beachbooker
     steps:
       - uses: actions/checkout@v4
       - name: Configure AWS Credentials
