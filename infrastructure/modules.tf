@@ -14,3 +14,7 @@ module "api" {
   gmail_sender_address = jsondecode(data.aws_secretsmanager_secret_version.gmail_credentials.secret_string)["GMAIL_SENDER_ADDRESS"]
   gmail_sender_password = jsondecode(data.aws_secretsmanager_secret_version.gmail_credentials.secret_string)["GMAIL_SENDER_PASSWORD"]
 }
+
+module "beachbooker" {
+  source = "./beachbooker"
+}
