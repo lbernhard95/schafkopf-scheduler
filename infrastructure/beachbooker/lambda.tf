@@ -11,8 +11,6 @@ resource "aws_lambda_function" "beachbooker" {
   environment {
     variables = {
       LOG_GROUP_NAME = aws_cloudwatch_log_group.beachbooker_logs.name
-      ZHS_USERNAME = jsondecode(data.aws_secretsmanager_secret_version.zhs_user_secret.secret_string)["ZHS_USERNAME"]
-      ZHS_PASSWORD = jsondecode(data.aws_secretsmanager_secret_version.zhs_user_secret.secret_string)["ZHS_PASSWORD"]
     }
   }
   
