@@ -9,7 +9,7 @@ resource "aws_cloudwatch_event_rule" "beachbooker" {
 }
 
 resource "aws_cloudwatch_event_target" "lambda_beachbooker_target" {
-  rule      = aws_cloudwatch_event_rule.every_monday_at_ten.name
+  rule      = aws_cloudwatch_event_rule.beachbooker.name
   target_id = "BeachBooker"
   arn       = aws_lambda_function.beachbooker.arn
 }
