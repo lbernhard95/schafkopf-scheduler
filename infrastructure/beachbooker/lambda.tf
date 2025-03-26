@@ -77,5 +77,5 @@ resource "aws_lambda_permission" "allow_cloudwatch_beachbooker" {
   principal     = "events.amazonaws.com"
 
   # Reference the ARN of the CloudWatch event rule
-  source_arn    = aws_cloudwatch_event_rule.every_monday_at_ten.arn
+  source_arn    = aws_cloudwatch_event_rule.beachbooker.arn
 }
