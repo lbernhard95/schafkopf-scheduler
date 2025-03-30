@@ -41,19 +41,19 @@ def create_event_found_endpoints(rsps: responses.RequestsMock, poll_id: str):
             " data-original-title="" title="">
             Lukas1
          </td>
-         <td class="vote-choice text-center 
+         <td class="vote-choice text-center
             " data-toggle="popover" data-trigger="hover" data-container="body" data-title="2023-01-06 00:00:00+00:00" data-content="Lukas1
             " data-placement="bottom" data-choice-value="" data-original-title="" title=""><span class="bg-90db46 fa fa-check"></span></td>
-         <td class="vote-choice text-center 
+         <td class="vote-choice text-center
             " data-toggle="popover" data-trigger="hover" data-container="body" data-title="2023-01-07 00:00:00+00:00" data-content="Lukas1
             " data-placement="bottom" data-choice-value="" data-original-title="" title=""><span class="bg-ffe800 fa fa-question"></span></td>
-         <td class="vote-choice text-center 
+         <td class="vote-choice text-center
             " data-toggle="popover" data-trigger="hover" data-container="body" data-title="2023-01-08 00:00:00+00:00" data-content="Lukas1
             " data-placement="bottom" data-choice-value="" data-original-title="" title=""><span class="bg-B0E fa fa-thumbs-down"></span></td>
-         <td class="vote-choice text-center 
+         <td class="vote-choice text-center
             " data-toggle="popover" data-trigger="hover" data-container="body" data-title="2023-01-09 00:00:00+00:00" data-content="Lukas1
             " data-placement="bottom" data-choice-value="" data-original-title="" title=""><span class="bg-c43131 fa fa-ban"></span></td>
-         <td class="vote-choice text-center 
+         <td class="vote-choice text-center
             " data-toggle="popover" data-trigger="hover" data-container="body" data-title="2023-01-10 00:00:00+00:00" data-content="Lukas1
             " data-placement="bottom" data-choice-value="" data-original-title="" title=""><span class="bg-c43131 fa fa-ban"></span></td>
          <td class="noprint vote-actions"><a href="/poll/DMUxeW4VKT/vote/323143/edit/" class="btn btn-xs btn-default" title="Edit vote"><i class="fa fa-pencil"></i></a></td>
@@ -64,19 +64,19 @@ def create_event_found_endpoints(rsps: responses.RequestsMock, poll_id: str):
             " data-original-title="" title="">
             Lukas2
          </td>
-         <td class="vote-choice text-center 
+         <td class="vote-choice text-center
             " data-toggle="popover" data-trigger="hover" data-container="body" data-title="2023-01-06 00:00:00+00:00" data-content="Lukas2
             " data-placement="bottom" data-choice-value="" data-original-title="" title=""><span class="bg-ffe800 fa fa-question"></span></td>
-         <td class="vote-choice text-center 
+         <td class="vote-choice text-center
             " data-toggle="popover" data-trigger="hover" data-container="body" data-title="2023-01-07 00:00:00+00:00" data-content="Lukas2
             " data-placement="bottom" data-choice-value="" data-original-title="" title=""><span class="bg-ffe800 fa fa-question"></span></td>
-         <td class="vote-choice text-center 
+         <td class="vote-choice text-center
             " data-toggle="popover" data-trigger="hover" data-container="body" data-title="2023-01-08 00:00:00+00:00" data-content="Lukas2
             " data-placement="bottom" data-choice-value="" data-original-title="" title=""><span class="bg-90db46 fa fa-check"></span></td>
-         <td class="vote-choice text-center 
+         <td class="vote-choice text-center
             " data-toggle="popover" data-trigger="hover" data-container="body" data-title="2023-01-09 00:00:00+00:00" data-content="Lukas2
             " data-placement="bottom" data-choice-value="" data-original-title="" title=""><span class="bg-90db46 fa fa-check"></span></td>
-         <td class="vote-choice text-center 
+         <td class="vote-choice text-center
             " data-toggle="popover" data-trigger="hover" data-container="body" data-title="2023-01-10 00:00:00+00:00" data-content="Lukas2
             " data-placement="bottom" data-choice-value="" data-original-title="" title=""><span class="bg-c43131 fa fa-ban"></span></td>
          <td class="noprint vote-actions"><a href="/poll/DMUxeW4VKT/vote/323144/edit/" class="btn btn-xs btn-default" title="Edit vote"><i class="fa fa-pencil"></i></a></td>
@@ -87,19 +87,19 @@ def create_event_found_endpoints(rsps: responses.RequestsMock, poll_id: str):
             " data-original-title="" title="">
             Lukas3
          </td>
-         <td class="vote-choice text-center 
+         <td class="vote-choice text-center
             " data-toggle="popover" data-trigger="hover" data-container="body" data-title="2023-01-06 00:00:00+00:00" data-content="Lukas3
             " data-placement="bottom" data-choice-value="" data-original-title="" title=""><span class="bg-90db46 fa fa-check"></span></td>
-         <td class="vote-choice text-center 
+         <td class="vote-choice text-center
             " data-toggle="popover" data-trigger="hover" data-container="body" data-title="2023-01-07 00:00:00+00:00" data-content="Lukas3
             " data-placement="bottom" data-choice-value="" data-original-title="" title=""><span class="bg-90db46 fa fa-check"></span></td>
-         <td class="vote-choice text-center 
+         <td class="vote-choice text-center
             " data-toggle="popover" data-trigger="hover" data-container="body" data-title="2023-01-08 00:00:00+00:00" data-content="Lukas3
             " data-placement="bottom" data-choice-value="" data-original-title="" title=""><span class="bg-90db46 fa fa-check"></span></td>
-         <td class="vote-choice text-center 
+         <td class="vote-choice text-center
             " data-toggle="popover" data-trigger="hover" data-container="body" data-title="2023-01-09 00:00:00+00:00" data-content="Lukas3
             " data-placement="bottom" data-choice-value="" data-original-title="" title=""><span class="bg-90db46 fa fa-check"></span></td>
-         <td class="vote-choice text-center 
+         <td class="vote-choice text-center
             " data-toggle="popover" data-trigger="hover" data-container="body" data-title="2023-01-10 00:00:00+00:00" data-content="Lukas3
             " data-placement="bottom" data-choice-value="" data-original-title="" title=""><span class="bg-90db46 fa fa-check"></span></td>
          <td class="noprint vote-actions"><a href="/poll/DMUxeW4VKT/vote/323703/edit/" class="btn btn-xs btn-default" title="Edit vote"><i class="fa fa-pencil"></i></a></td>
@@ -110,19 +110,19 @@ def create_event_found_endpoints(rsps: responses.RequestsMock, poll_id: str):
             " data-original-title="" title="">
             Lukas4
          </td>
-         <td class="vote-choice text-center 
+         <td class="vote-choice text-center
             " data-toggle="popover" data-trigger="hover" data-container="body" data-title="2023-01-06 00:00:00+00:00" data-content="Lukas4
             " data-placement="bottom" data-choice-value="" data-original-title="" title=""><span class="bg-B0E fa fa-thumbs-down"></span></td>
-         <td class="vote-choice text-center 
+         <td class="vote-choice text-center
             " data-toggle="popover" data-trigger="hover" data-container="body" data-title="2023-01-07 00:00:00+00:00" data-content="Lukas4
             " data-placement="bottom" data-choice-value="" data-original-title="" title=""><span class="bg-c43131 fa fa-ban"></span></td>
-         <td class="vote-choice text-center 
+         <td class="vote-choice text-center
             " data-toggle="popover" data-trigger="hover" data-container="body" data-title="2023-01-08 00:00:00+00:00" data-content="Lukas4
             " data-placement="bottom" data-choice-value="" data-original-title="" title=""><span class="bg-B0E fa fa-thumbs-down"></span></td>
-         <td class="vote-choice text-center 
+         <td class="vote-choice text-center
             " data-toggle="popover" data-trigger="hover" data-container="body" data-title="2023-01-09 00:00:00+00:00" data-content="Lukas4
             " data-placement="bottom" data-choice-value="" data-original-title="" title=""><span class="bg-90db46 fa fa-check"></span></td>
-         <td class="vote-choice text-center 
+         <td class="vote-choice text-center
             " data-toggle="popover" data-trigger="hover" data-container="body" data-title="2023-01-10 00:00:00+00:00" data-content="Lukas4
             " data-placement="bottom" data-choice-value="" data-original-title="" title=""><span class="bg-B0E fa fa-thumbs-down"></span></td>
          <td class="noprint vote-actions"><a href="/poll/DMUxeW4VKT/vote/323704/edit/" class="btn btn-xs btn-default" title="Edit vote"><i class="fa fa-pencil"></i></a></td>
@@ -133,19 +133,19 @@ def create_event_found_endpoints(rsps: responses.RequestsMock, poll_id: str):
             " data-original-title="" title="">
             Lukas6
          </td>
-         <td class="vote-choice text-center 
+         <td class="vote-choice text-center
             " data-toggle="popover" data-trigger="hover" data-container="body" data-title="2023-01-06 00:00:00+00:00" data-content="Lukas6
             " data-placement="bottom" data-choice-value="" data-original-title="" title=""><span class="bg-90db46 fa fa-check"></span></td>
-         <td class="vote-choice text-center 
+         <td class="vote-choice text-center
             " data-toggle="popover" data-trigger="hover" data-container="body" data-title="2023-01-07 00:00:00+00:00" data-content="Lukas6
             " data-placement="bottom" data-choice-value="" data-original-title="" title=""><span class="bg-90db46 fa fa-check"></span></td>
-         <td class="vote-choice text-center 
+         <td class="vote-choice text-center
             " data-toggle="popover" data-trigger="hover" data-container="body" data-title="2023-01-08 00:00:00+00:00" data-content="Lukas6
             " data-placement="bottom" data-choice-value="" data-original-title="" title=""><span class="bg-c43131 fa fa-ban"></span></td>
-         <td class="vote-choice text-center 
+         <td class="vote-choice text-center
             " data-toggle="popover" data-trigger="hover" data-container="body" data-title="2023-01-09 00:00:00+00:00" data-content="Lukas6
             " data-placement="bottom" data-choice-value="" data-original-title="" title=""><span class="bg-90db46 fa fa-check"></span></td>
-         <td class="vote-choice text-center 
+         <td class="vote-choice text-center
             " data-toggle="popover" data-trigger="hover" data-container="body" data-title="2023-01-10 00:00:00+00:00" data-content="Lukas6
             " data-placement="bottom" data-choice-value="" data-original-title="" title=""><span class="bg-c43131 fa fa-ban"></span></td>
          <td class="noprint vote-actions"><a href="/poll/DMUxeW4VKT/vote/323705/edit/" class="btn btn-xs btn-default" title="Edit vote"><i class="fa fa-pencil"></i></a></td>

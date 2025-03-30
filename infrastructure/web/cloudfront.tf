@@ -70,4 +70,3 @@ resource "aws_route53_record" "web" {
     evaluate_target_health = false
   }
 }
-

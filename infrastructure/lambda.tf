@@ -10,8 +10,8 @@ resource "aws_lambda_function" "schafkopf_scheduler" {
 
   environment {
     variables = {
-      GMAIL_SENDER_ADDRESS = jsondecode(data.aws_secretsmanager_secret_version.gmail_credentials.secret_string)["GMAIL_SENDER_ADDRESS"]
-      GMAIL_SENDER_PASSWORD = jsondecode(data.aws_secretsmanager_secret_version.gmail_credentials.secret_string)["GMAIL_SENDER_PASSWORD"]
+      GMAIL_SENDER_ADDRESS = local.gmail_sender_email
+      GMAIL_SENDER_PASSWORD = local.gmail_sender_password
     }
   }
 }

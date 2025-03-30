@@ -13,9 +13,11 @@ resource "aws_lambda_function" "beachbooker" {
       LOG_GROUP_NAME = aws_cloudwatch_log_group.beachbooker_logs.name
       ZHS_USERNAME = jsondecode(data.aws_secretsmanager_secret_version.zhs_user_secret.secret_string)["ZHS_USERNAME"]
       ZHS_PASSWORD = jsondecode(data.aws_secretsmanager_secret_version.zhs_user_secret.secret_string)["ZHS_PASSWORD"]
+      GMAIL_SENDER_ADDRESS = var.gmail_sender_email
+      GMAIL_SENDER_PASSWORD = var.gmail_sender_password
     }
   }
-  
+
   depends_on = [
     aws_iam_role_policy_attachment.beachbooker,
     aws_cloudwatch_log_group.beachbooker_logs,

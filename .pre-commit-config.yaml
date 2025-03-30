@@ -1,0 +1,36 @@
+# Apply to all files without commiting:
+#   pre-commit run --all-files
+# Update this file:
+#   pre-commit autoupdate
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-ast
+      - id: check-byte-order-marker
+      - id: check-case-conflict
+      - id: check-docstring-first
+      - id: check-executables-have-shebangs
+      - id: check-json
+      - id: check-yaml
+      - id: debug-statements
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: mixed-line-ending
+  - repo: https://github.com/psf/black
+    rev: 24.4.0
+    hooks:
+      - id: black
+  - repo: https://github.com/asottile/blacken-docs
+    rev: 1.16.0
+    hooks:
+      - id: blacken-docs
+  - repo: local
+    hooks:
+      - id: poetry-lock
+        name: poetry lock
+        # local version of poetry and BB versions might differ, which would make this fail, so we skip it in CI
+        entry: bash -c '[ -n "$BB_CLOUD_CI" ] && echo "Skipping poetry lock check in CI" || { poetry lock && git diff --exit-code --quiet poetry.lock; }'
+        language: system
+        pass_filenames: false
