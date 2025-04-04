@@ -27,6 +27,7 @@ httpx = "^0.28.1"
 pandas = "^2.2.3"
 black = "^25.1.0"
 pre-commit = "^4.2.0"
+docker = "^7.1.0"
 
 [tool.poetry.group.beachbooker.dependencies]
 selenium = "^4.10.0"
@@ -34,7 +35,6 @@ selenium = "^4.10.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
 
 [tool.black]
 line-length = 130

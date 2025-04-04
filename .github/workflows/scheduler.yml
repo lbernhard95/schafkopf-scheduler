@@ -115,7 +115,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
       - name: Build, tag, and push docker image to Amazon ECR
         run: |
-          docker build -f ./beachbooker/Dockerfile -t 082113759242.dkr.ecr.eu-central-1.amazonaws.com/beachbooker-lambda:latest .
+          docker build --target lambda -f ./beachbooker/Dockerfile -t 082113759242.dkr.ecr.eu-central-1.amazonaws.com/beachbooker-lambda:latest .
           docker push 082113759242.dkr.ecr.eu-central-1.amazonaws.com/beachbooker-lambda:latest
   deploy:
     runs-on: ubuntu-latest

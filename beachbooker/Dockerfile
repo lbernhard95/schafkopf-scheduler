@@ -16,7 +16,7 @@ RUN poetry config virtualenvs.create false && poetry install --no-root --with be
 COPY core core
 COPY beachbooker beachbooker
 
-CMD ["poetry", "run", "python3", "beachbooker/core/main.py"]
+CMD ["poetry", "run", "python3", "beachbooker/main.py"]
 
 FROM base AS local
 COPY .env .env
