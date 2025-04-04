@@ -29,11 +29,7 @@ class PollItem(BaseModel):
         self.next_schafkopf_event = event_date
 
     def poll_is_running(self) -> bool:
-        return (
-            self.running_poll_id
-            and not self.is_time_to_start_new_poll()
-            and self.next_schafkopf_event is None
-        )
+        return self.running_poll_id and not self.is_time_to_start_new_poll() and self.next_schafkopf_event is None
 
     def is_time_to_start_new_poll(self) -> bool:
         return datetime.now().date() >= self.start_next_poll_date.date()
@@ -43,14 +39,14 @@ def load(dynamodb) -> PollItem:
     try:
         table = dynamodb.Table("schafkopf_polls")
         response = table.query(
-            KeyConditionExpression=f"#u = :a",
+            KeyConditionExpression="#u = :a",
             ExpressionAttributeNames={"#u": "uuid"},
             ExpressionAttributeValues={":a": POLL_ITEM_UUID},
             Limit=1,
         )
         return PollItem(**response["Items"][0])
     except Exception as e:
-        raise ValueError(f"Could not find poll item", e)
+        raise ValueError("Could not find poll item", e)
 
 
 def update(dynamodb, poll_item: PollItem):

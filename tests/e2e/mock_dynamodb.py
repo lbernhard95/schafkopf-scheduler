@@ -14,9 +14,7 @@ def create_emails_table(emails: list[str] = None) -> DynamoDBTable:
     )
     boto_table.meta.client.get_waiter("table_exists").wait(TableName=tabel_name)
     table = DynamoDBTable(tabel_name)
-    table.add_many(
-        [{"email": m} for m in emails or ["test@example.com", "test2@example.com"]]
-    )
+    table.add_many([{"email": m} for m in emails or ["test@example.com", "test2@example.com"]])
     return table
 
 

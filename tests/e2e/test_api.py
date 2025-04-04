@@ -32,9 +32,7 @@ def test_subscribe_to_new_schafkopf_rounds_(mock_gmail_send):
     assert rsp.json() == {"email": "new-test@email.com"}
     assert {"email": "new-test@email.com"} in mails
     assert len(mails) == 3
-    mock_gmail_send.assert_called_with(
-        receivers=ANY, subject="Welcome to our Schafkopf Round", body=ANY
-    )
+    mock_gmail_send.assert_called_with(receivers=ANY, subject="Welcome to our Schafkopf Round", body=ANY)
 
 
 @mock_aws

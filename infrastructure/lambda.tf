@@ -10,8 +10,8 @@ resource "aws_lambda_function" "schafkopf_scheduler" {
 
   environment {
     variables = {
-      GMAIL_SENDER_ADDRESS = jsondecode(data.aws_secretsmanager_secret_version.gmail_credentials.secret_string)["GMAIL_SENDER_ADDRESS"]
-      GMAIL_SENDER_PASSWORD = jsondecode(data.aws_secretsmanager_secret_version.gmail_credentials.secret_string)["GMAIL_SENDER_PASSWORD"]
+      GMAIL_SENDER_ADDRESS  = local.gmail_sender_email
+      GMAIL_SENDER_PASSWORD = local.gmail_sender_password
     }
   }
 }
@@ -40,41 +40,41 @@ resource "aws_iam_policy" "schafkopf_scheduler" {
     Version = "2012-10-17"
     Statement = [
       {
-        Effect = "Allow"
-        Action = "logs:CreateLogGroup"
+        Effect   = "Allow"
+        Action   = "logs:CreateLogGroup"
         Resource = "*"
       },
       {
-        Effect = "Allow"
-        Action = "logs:CreateLogStream"
+        Effect   = "Allow"
+        Action   = "logs:CreateLogStream"
         Resource = "*"
       },
       {
-        Effect = "Allow"
-        Action = "logs:PutLogEvents"
+        Effect   = "Allow"
+        Action   = "logs:PutLogEvents"
         Resource = "*"
       },
       {
-        "Effect": "Allow",
-        "Action": [
-            "dynamodb:BatchGetItem",
-            "dynamodb:DescribeTable",
-            "dynamodb:GetItem",
-            "dynamodb:Query",
-            "dynamodb:Scan"
+        "Effect" : "Allow",
+        "Action" : [
+          "dynamodb:BatchGetItem",
+          "dynamodb:DescribeTable",
+          "dynamodb:GetItem",
+          "dynamodb:Query",
+          "dynamodb:Scan"
         ],
-        "Resource": [
+        "Resource" : [
           aws_dynamodb_table.emails.arn,
           aws_dynamodb_table.polls.arn
         ]
       },
       {
-        "Effect": "Allow",
-        "Action": [
-            "dynamodb:PutItem",
-            "dynamodb:UpdateItem",
+        "Effect" : "Allow",
+        "Action" : [
+          "dynamodb:PutItem",
+          "dynamodb:UpdateItem",
         ],
-        "Resource": aws_dynamodb_table.polls.arn
+        "Resource" : aws_dynamodb_table.polls.arn
       }
     ]
   })
@@ -94,5 +94,5 @@ resource "aws_lambda_permission" "allow_cloudwatch" {
   principal     = "events.amazonaws.com"
 
   # Reference the ARN of the CloudWatch event rule
-  source_arn    = aws_cloudwatch_event_rule.every_day_at_five.arn
+  source_arn = aws_cloudwatch_event_rule.every_day_at_five.arn
 }

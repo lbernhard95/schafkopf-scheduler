@@ -44,9 +44,7 @@ def start_new_poll(subscribed_emails) -> PollItem:
     print("Poll created:", new_poll_website)
 
     print("Send out email notifications")
-    gmail.send_bitpoll_invitation(
-        receivers=subscribed_emails, bitpoll_link=new_poll_website
-    )
+    gmail.send_bitpoll_invitation(receivers=subscribed_emails, bitpoll_link=new_poll_website)
     return PollItem.create_new(
         poll_id=poll_id,
         next_poll_date=max(dates),

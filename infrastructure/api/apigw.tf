@@ -4,14 +4,14 @@ resource "aws_apigatewayv2_api" "schafkopf_api" {
 }
 
 resource "aws_apigatewayv2_integration" "schafkopf_api" {
-  api_id             = aws_apigatewayv2_api.schafkopf_api.id
-  integration_type   = "AWS_PROXY"
-  integration_uri    = aws_lambda_function.api.invoke_arn
+  api_id           = aws_apigatewayv2_api.schafkopf_api.id
+  integration_type = "AWS_PROXY"
+  integration_uri  = aws_lambda_function.api.invoke_arn
 }
 
 resource "aws_apigatewayv2_route" "schafkopf_api" {
   api_id    = aws_apigatewayv2_api.schafkopf_api.id
-  route_key = "$default"  # Catch-all route
+  route_key = "$default" # Catch-all route
   target    = "integrations/${aws_apigatewayv2_integration.schafkopf_api.id}"
 }
 

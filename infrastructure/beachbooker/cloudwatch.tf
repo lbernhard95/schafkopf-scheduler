@@ -5,7 +5,7 @@ resource "aws_cloudwatch_log_group" "beachbooker_logs" {
 
 resource "aws_cloudwatch_event_rule" "beachbooker" {
   name                = "beachbooker"
-  schedule_expression = "cron(0 22 ? * MON *)"  # This triggers at 10 PM UTC on mondays (midnight german summer time)
+  schedule_expression = "cron(0 22 ? * MON *)" # This triggers at 10 PM UTC on mondays (midnight german summer time)
 }
 
 resource "aws_cloudwatch_event_target" "lambda_beachbooker_target" {

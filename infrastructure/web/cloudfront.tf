@@ -5,7 +5,7 @@ resource "aws_cloudfront_origin_access_identity" "s3_identity" {
 resource "aws_cloudfront_distribution" "web" {
   origin {
     domain_name = aws_s3_bucket.web.bucket_regional_domain_name
-    origin_id = "S3-Origin"
+    origin_id   = "S3-Origin"
     s3_origin_config {
       origin_access_identity = aws_cloudfront_origin_access_identity.s3_identity.cloudfront_access_identity_path
     }
@@ -15,7 +15,7 @@ resource "aws_cloudfront_distribution" "web" {
   ]
 
 
-  enabled = true
+  enabled             = true
   default_root_object = "index.html"
 
   custom_error_response {
@@ -49,7 +49,7 @@ resource "aws_cloudfront_distribution" "web" {
 
   viewer_certificate {
     acm_certificate_arn = aws_acm_certificate.cert-my-aws-project-com.arn
-    ssl_support_method = "sni-only"
+    ssl_support_method  = "sni-only"
   }
 
   restrictions {
@@ -70,4 +70,3 @@ resource "aws_route53_record" "web" {
     evaluate_target_health = false
   }
 }
-

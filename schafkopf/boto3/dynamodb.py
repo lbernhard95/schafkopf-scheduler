@@ -57,9 +57,7 @@ class DynamoDBTable:
             response = self.table.scan()
             items = response["Items"]
             while "LastEvaluatedKey" in response:
-                response = self.table.scan(
-                    ExclusiveStartKey=response["LastEvaluatedKey"]
-                )
+                response = self.table.scan(ExclusiveStartKey=response["LastEvaluatedKey"])
                 items.extend(response["Items"])
             result = []
             for item in items:

@@ -9,7 +9,7 @@ load_dotenv()
 
 
 def read_only() -> bool:
-    return os.getenv("READ_ONLY") == "true"
+    return bool(int(os.getenv("READ_ONLY", 0)))
 
 
 def get_gmail_sender_address() -> str:

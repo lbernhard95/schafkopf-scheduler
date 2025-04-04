@@ -14,6 +14,6 @@ COPY poetry.lock /app/
 RUN poetry config virtualenvs.create false && poetry install --no-root
 
 COPY schafkopf schafkopf
-COPY templates templates
+COPY core core
 ENTRYPOINT [ "/usr/local/bin/python", "-m", "awslambdaric" ]
 CMD [ "schafkopf.scheduler.lambda_handler.lambda_handler" ]
