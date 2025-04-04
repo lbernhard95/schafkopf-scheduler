@@ -8,6 +8,8 @@ from selenium.webdriver.chrome.options import Options
 import time
 import random
 
+from core.log import logger
+
 
 def get_driver():
     chrome_options = Options()
@@ -26,7 +28,7 @@ def close_driver(driver):
 def login(driver, username, password):
     driver.get("https://ssl.forumedia.eu/zhs-courtbuchung.de/reservations.php?action=showRevervations&type_id=2")
 
-    print("Logging in")
+    logger.info("Logging in")
     driver.find_element(By.ID, "login_block").click()
     driver.find_element(By.ID, "login").send_keys(username)
     driver.find_element(By.ID, "password").send_keys(password)
@@ -35,17 +37,17 @@ def login(driver, username, password):
 
     try:
         driver.find_element(By.CLASS_NAME, "outlogin")
-        print("Login successful!")
+        logger.info("Login successful!")
     except Exception as e:
-        print("Something went wrong.")
-        print(e)
+        logger.error("Something went wrong.")
+        logger.error(e)
 
 
 def find_and_book_slots(driver, booking_date, booking_times):
     """
     Returns True if an available slot for each time in booking_times on booking_date on one field was found
     """
-    print(f"\nLooking for {booking_times} on {booking_date}")
+    logger.info(f"Looking for {booking_times} on {booking_date}")
 
     for page in [1, 2]:
         # Go through each page
@@ -59,13 +61,13 @@ def find_and_book_slots(driver, booking_date, booking_times):
         for field in fields:
             # Go through each field
             field_name = field.find_element(By.XPATH, ".//th").text
-            print(f"Searching through {field_name}")
+            logger.info(f"Searching through {field_name}")
 
             available_slots = field.find_elements(By.XPATH, ".//input[@type='checkbox']")
             for slot in available_slots:
                 if any(booking_time in slot.get_attribute("name") for booking_time in booking_times):
                     # If current slot time is in desired booking times
-                    print(f"Slot found: {slot.get_attribute('name')} on field {field_name}")
+                    logger.info(f"Slot found: {slot.get_attribute('name')} on field {field_name}")
 
                     slot_collection.append(slot)
 
@@ -79,7 +81,7 @@ def find_and_book_slots(driver, booking_date, booking_times):
 
                         try:
                             # Book slots
-                            print("Booking...")
+                            logger.info("Booking...")
                             button_book = field.find_element(By.XPATH, ".//input[@type='submit'][@value='Buchung']")
                             driver.execute_script("arguments[0].click();", button_book)
 
@@ -98,18 +100,18 @@ def find_and_book_slots(driver, booking_date, booking_times):
                                 if "captcha" in driver.page_source:
                                     return "captcha"
                                 else:
-                                    print("Something unforeseen went wrong.")
-                                    print(e)
-                                    print("SOURCE:")
-                                    print(driver.page_source)
+                                    logger.error("Something unforeseen went wrong.")
+                                    logger.error(e)
+                                    logger.error("SOURCE:")
+                                    logger.error(driver.page_source)
                                     return "error"
 
                         except Exception as e:
                             if "Mindestbuchungszeit" in driver.page_source:
                                 return "mindestbuchungszeit"
                             else:
-                                print(e)
-                                print(driver.page_source)
+                                logger.error(e)
+                                logger.error(driver.page_source)
                                 return "error"
 
             if len(slot_collection) == len(booking_times):
@@ -117,7 +119,7 @@ def find_and_book_slots(driver, booking_date, booking_times):
                 break
             else:
                 if len(slot_collection) > 0:
-                    print("However, no slots available for all required times")
+                    logger.error("However, no slots available for all required times")
 
         if len(slot_collection) == len(booking_times):
             # If all required slots were found (break page loop)
