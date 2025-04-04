@@ -31,7 +31,7 @@ jobs:
       - name: Run pre-commit hooks
         run: poetry run pre-commit run --all-files
       - name: Run validation
-        run: poetry run validation tests
+        run: poetry run pytest tests
   build-web:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
