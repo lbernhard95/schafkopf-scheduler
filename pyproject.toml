@@ -5,7 +5,7 @@ description = ""
 authors = ["Lukas Bernhard <strange85@web.de>"]
 readme = "README.md"
 packages = [
-    {include = "schafkop"},
+    {include = "schafkopf"},
     {include = "beachbooker"},
     {include = "core"},
 ]
