@@ -52,7 +52,7 @@ def find_and_book_slots(driver, booking_date, booking_times):
     for page in [1, 2]:
         # Go through each page
         driver.get(
-            f"https://ssl.forumedia.eu/zhs-courtbuchung.de/reservations.php?action=showRevervations&type_id=2&date={booking_date}&page={page}"
+            f"https://zhs-courtbuchung.de/reservations.php?action=showRevervations&type_id=2&date={booking_date}&page={page}"
         )
         fields = driver.find_elements(
             By.XPATH, "//form[@action='reservation_order.php']"

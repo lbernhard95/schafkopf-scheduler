@@ -4,14 +4,33 @@ on:
   push:
     branches:
       - main
-
+  pull_request:
+    branches:
+      - '**'
 permissions:
   id-token: write
   contents: read
 
 jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version:'3.11'
+      - name: Install Poetry
+        run: pip install poetry
+      - name: Install dependencies
+        run: poetry install
+      - name: Run pre-commit hooks
+        run: poetry run pre-commit run --all-files
+      - name: Run pytest
+        run: poetry run pytest tests
   build-web:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
       - name: Configure AWS Credentials
@@ -41,6 +60,9 @@ jobs:
           aws s3 sync ./build s3://schafkopf-web-082113759242 --delete
   build-api:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    needs:
+      - pytest
     steps:
       - uses: actions/checkout@v4
       - name: Configure AWS Credentials
@@ -57,6 +79,9 @@ jobs:
           docker push 082113759242.dkr.ecr.eu-central-1.amazonaws.com/schafkopf-api-lambda:latest
   build-scheduler:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    needs:
+      - pytest
     steps:
       - uses: actions/checkout@v4
       - name: Configure AWS Credentials
@@ -72,23 +97,27 @@ jobs:
           docker build -f ./schafkopf/scheduler/Dockerfile -t 082113759242.dkr.ecr.eu-central-1.amazonaws.com/schafkopf-scheduler-lambda:latest .
           docker push 082113759242.dkr.ecr.eu-central-1.amazonaws.com/schafkopf-scheduler-lambda:latest
   build-beachbooker:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v4
-        - name: Configure AWS Credentials
-          uses: aws-actions/configure-aws-credentials@v4
-          with:
-            role-to-assume: arn:aws:iam::082113759242:role/github_oidc_role
-            aws-region: eu-central-1
-        - name: Login to Amazon ECR
-          id: login-ecr
-          uses: aws-actions/amazon-ecr-login@v2
-        - name: Build, tag, and push docker image to Amazon ECR
-          run: |
-            docker build -f ./beachbooker/Dockerfile -t 082113759242.dkr.ecr.eu-central-1.amazonaws.com/beachbooker-lambda:latest .
-            docker push 082113759242.dkr.ecr.eu-central-1.amazonaws.com/beachbooker-lambda:latest
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    needs:
+      - pytest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::082113759242:role/github_oidc_role
+          aws-region: eu-central-1
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+      - name: Build, tag, and push docker image to Amazon ECR
+        run: |
+          docker build -f ./beachbooker/Dockerfile -t 082113759242.dkr.ecr.eu-central-1.amazonaws.com/beachbooker-lambda:latest .
+          docker push 082113759242.dkr.ecr.eu-central-1.amazonaws.com/beachbooker-lambda:latest
   deploy:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     needs:
       - build-scheduler
       - build-api
