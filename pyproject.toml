@@ -4,7 +4,11 @@ version = "0.1.0"
 description = ""
 authors = ["Lukas Bernhard <strange85@web.de>"]
 readme = "README.md"
-
+packages = [
+    {include = "schafkop"},
+    {include = "beachbooker"},
+    {include = "core"},
+]
 [tool.poetry.dependencies]
 python = "^3.12"
 pydantic = "^2.9.2"
