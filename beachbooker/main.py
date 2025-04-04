@@ -17,9 +17,7 @@ def main():
     env = Environment.load()
     login(driver, username=env.zhs_username, password=env.zhs_password)
 
-    dt = datetime.now() + timedelta(
-        days=7
-    )  # Normally +8, but with time zone issues on AWS +9
+    dt = datetime.now() + timedelta(days=7)  # Normally +8, but with time zone issues on AWS +9
     # dt = datetime.now() + timedelta(days=8)
     booking_date = dt.strftime("%Y-%m-%d")
 
@@ -39,9 +37,7 @@ def main():
             print("Booking successful!")
             break
         elif res == "captcha":
-            print(
-                f"Google captcha not passed. This was attempt {captcha_count+1}/{captcha_max}"
-            )
+            print(f"Google captcha not passed. This was attempt {captcha_count + 1}/{captcha_max}")
             captcha_count += 1
             if captcha_count >= captcha_max:
                 print("I have had enough!")

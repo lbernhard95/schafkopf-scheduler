@@ -1,14 +1,14 @@
 resource "aws_acm_certificate" "cert-my-aws-project-com" {
   domain_name       = local.web_sub_domain
   validation_method = "DNS"
-  provider = aws.us-east
+  provider          = aws.us-east
   lifecycle {
     create_before_destroy = true
   }
 }
 
 resource "aws_acm_certificate_validation" "cert-validation" {
-  provider = aws.us-east
+  provider                = aws.us-east
   certificate_arn         = aws_acm_certificate.cert-my-aws-project-com.arn
   validation_record_fqdns = [for record in aws_route53_record.cert-validation-record : record.fqdn]
 }

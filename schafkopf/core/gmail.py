@@ -9,36 +9,24 @@ from schafkopf.core import env
 
 
 def send_bitpoll_invitation(receivers: List[str], bitpoll_link: str):
-    html = utils.load_html_template(
-        f"{env.BASE_PATH}/schafkopf/templates/poll_invitation.html"
-    )
+    html = utils.load_html_template(f"{env.BASE_PATH}/schafkopf/templates/poll_invitation.html")
     html = html.replace("YOUR_BITPOLL_LINK_HERE", bitpoll_link)
 
     GmailClient().send(receivers=receivers, subject="New Schafkopf Round", body=html)
 
 
 def send_welcome_with_running_bitpoll(receiver: str, bitpoll_link: str):
-    html = utils.load_html_template(
-        f"{env.BASE_PATH}/schafkopf/templates/welcome_with_poll_running.html"
-    )
+    html = utils.load_html_template(f"{env.BASE_PATH}/schafkopf/templates/welcome_with_poll_running.html")
     html = html.replace("YOUR_BITPOLL_LINK_HERE", bitpoll_link)
 
-    GmailClient().send(
-        receivers=[receiver], subject="Welcome to our Schafkopf Round", body=html
-    )
+    GmailClient().send(receivers=[receiver], subject="Welcome to our Schafkopf Round", body=html)
 
 
-def send_schafkopf_meeting_invitation(
-    receivers: List[str], attendees: List[str], start: datetime, bitpoll_link: str
-):
-    html = utils.load_html_template(
-        f"{env.BASE_PATH}/schafkopf/templates/schafkopf_scheduled.html"
-    )
+def send_schafkopf_meeting_invitation(receivers: List[str], attendees: List[str], start: datetime, bitpoll_link: str):
+    html = utils.load_html_template(f"{env.BASE_PATH}/schafkopf/templates/schafkopf_scheduled.html")
     html = html.replace("SCHEDULED_DATE_PLACEHOLDER", format_datetime(start))
     html = html.replace("YOUR_BITPOLL_LINK_HERE", bitpoll_link)
-    html = html.replace(
-        "ATTENDEE_LIST_PLACEHOLDER", "\n".join(f"<li>{a}</li>" for a in attendees)
-    )
+    html = html.replace("ATTENDEE_LIST_PLACEHOLDER", "\n".join(f"<li>{a}</li>" for a in attendees))
 
     GmailClient().send(
         receivers=receivers,
@@ -51,12 +39,8 @@ def send_schafkopf_meeting_invitation(
     )
 
 
-def send_welcome_with_meeting_invitation(
-    receiver: str, start: datetime, bitpoll_link: str
-):
-    html = utils.load_html_template(
-        f"{env.BASE_PATH}/schafkopf/templates/welcome_with_event_scheduled.html"
-    )
+def send_welcome_with_meeting_invitation(receiver: str, start: datetime, bitpoll_link: str):
+    html = utils.load_html_template(f"{env.BASE_PATH}/schafkopf/templates/welcome_with_event_scheduled.html")
     html = html.replace("SCHEDULED_DATE_PLACEHOLDER", format_datetime(start))
     html = html.replace("YOUR_BITPOLL_LINK_HERE", bitpoll_link)
 
@@ -87,7 +71,7 @@ END:VCALENDAR
     part = MIMEBase("application", "octet-stream")
     part.set_payload(ics_content.encode("utf-8"))
     encoders.encode_base64(part)
-    part.add_header("Content-Disposition", f"attachment; filename=schafkopfen.ics")
+    part.add_header("Content-Disposition", "attachment; filename=schafkopfen.ics")
     return part
 
 

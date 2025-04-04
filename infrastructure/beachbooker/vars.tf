@@ -3,5 +3,5 @@ variable "gmail_sender_email" {
 }
 
 variable "gmail_sender_password" {
-    type = string
+  type = string
 }

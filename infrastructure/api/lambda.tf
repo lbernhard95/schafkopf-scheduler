@@ -10,7 +10,7 @@ resource "aws_lambda_function" "api" {
 
   environment {
     variables = {
-      GMAIL_SENDER_ADDRESS = var.gmail_sender_address
+      GMAIL_SENDER_ADDRESS  = var.gmail_sender_address
       GMAIL_SENDER_PASSWORD = var.gmail_sender_password
     }
   }
@@ -40,42 +40,42 @@ resource "aws_iam_policy" "api" {
     Version = "2012-10-17"
     Statement = [
       {
-        Effect = "Allow"
-        Action = "logs:CreateLogGroup"
+        Effect   = "Allow"
+        Action   = "logs:CreateLogGroup"
         Resource = "*"
       },
       {
-        Effect = "Allow"
-        Action = "logs:CreateLogStream"
+        Effect   = "Allow"
+        Action   = "logs:CreateLogStream"
         Resource = "*"
       },
       {
-        Effect = "Allow"
-        Action = "logs:PutLogEvents"
+        Effect   = "Allow"
+        Action   = "logs:PutLogEvents"
         Resource = "*"
       },
       {
-        "Effect": "Allow",
-        "Action": [
-            "dynamodb:BatchGetItem",
-            "dynamodb:DescribeTable",
-            "dynamodb:GetItem",
-            "dynamodb:Query",
-            "dynamodb:Scan"
+        "Effect" : "Allow",
+        "Action" : [
+          "dynamodb:BatchGetItem",
+          "dynamodb:DescribeTable",
+          "dynamodb:GetItem",
+          "dynamodb:Query",
+          "dynamodb:Scan"
         ],
-        "Resource": [
+        "Resource" : [
           var.dynamodb_email_arn,
           var.dynamodb_polls_arn,
         ]
       },
       {
-        "Effect": "Allow",
-        "Action": [
-            "dynamodb:PutItem",
-            "dynamodb:UpdateItem",
-            "dynamodb:DeleteItem",
+        "Effect" : "Allow",
+        "Action" : [
+          "dynamodb:PutItem",
+          "dynamodb:UpdateItem",
+          "dynamodb:DeleteItem",
         ],
-        "Resource": var.dynamodb_email_arn,
+        "Resource" : var.dynamodb_email_arn,
       }
     ]
   })

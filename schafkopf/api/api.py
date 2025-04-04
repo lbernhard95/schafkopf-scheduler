@@ -36,9 +36,7 @@ def subscribe_to_schafkopf_rounds(req: SubscribeRequest) -> SubscribeResponse:
         )
     else:
         print("Send invite email with next date")
-        gmail.send_welcome_with_meeting_invitation(
-            receiver=req.email, start=poll.next_schafkopf_event, bitpoll_link=poll_id
-        )
+        gmail.send_welcome_with_meeting_invitation(receiver=req.email, start=poll.next_schafkopf_event, bitpoll_link=poll_id)
     return SubscribeResponse(email=email_item.email)
 
 

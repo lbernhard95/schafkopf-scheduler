@@ -1,8 +1,6 @@
 import re
 from datetime import datetime
-from enum import Enum
 from typing import List, Optional
-from uuid import uuid4
 
 import bs4
 import pandas as pd
@@ -24,21 +22,13 @@ class VoteDayResult(BaseModel):
     @property
     def attendance_probability(self) -> float:
         return (
-            self.yes_count * 100
-            + self.no_count * 0
-            + self.probably_no_count * 25
-            + self.probably_yes_count * 50
+            self.yes_count * 100 + self.no_count * 0 + self.probably_no_count * 25 + self.probably_yes_count * 50
         ) / self.participation_count
 
     @computed_field
     @property
     def participation_count(self) -> int:
-        return (
-            self.yes_count
-            + self.no_count
-            + self.probably_no_count
-            + self.probably_yes_count
-        )
+        return self.yes_count + self.no_count + self.probably_no_count + self.probably_yes_count
 
 
 def get_voting_table(poll_id: str) -> bs4.Tag:
@@ -56,9 +46,7 @@ def parse_votes(table: bs4.Tag) -> pd.DataFrame:
                 date = cell["data-title"].split()[0]  # Extract only the date part
                 vote_icon = cell.select_one("span.fa")
                 if vote_icon:
-                    vote_type = vote_icon["class"][
-                        2
-                    ]  # Assuming format like 'fa fa-check'
+                    vote_type = vote_icon["class"][2]  # Assuming format like 'fa fa-check'
                     votes.append({"date": date, "user": user, "vote": vote_type})
             except Exception:
                 print(f"Error parsing vote for user {user}")
@@ -97,9 +85,7 @@ def find_day_for_next_event(df: pd.DataFrame) -> Optional[datetime]:
 
 
 def get_list_of_attendees(df: pd.DataFrame, date: datetime) -> List[str]:
-    return df[
-        (df["date"] == str(pd.to_datetime(date).date())) & (df["vote"] == "fa-check")
-    ]["user"].tolist()
+    return df[(df["date"] == str(pd.to_datetime(date).date())) & (df["vote"] == "fa-check")]["user"].tolist()
 
 
 def create_new_poll(csrf_token: str):
@@ -114,9 +100,7 @@ def create_new_poll(csrf_token: str):
         "one_vote_per_user": "on",
     }
 
-    response = requests.post(
-        f"{BITPOLL_URL}/", headers=get_headers(csrf_token), data=data
-    )
+    response = requests.post(f"{BITPOLL_URL}/", headers=get_headers(csrf_token), data=data)
 
     if response.status_code != 200:
         raise ValueError(response.text)

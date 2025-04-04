@@ -32,7 +32,7 @@ def create_event_found_endpoints(rsps: responses.RequestsMock, poll_id: str):
     rsps.add(
         responses.GET,
         f"https://bitpoll.de/poll/{poll_id}",
-        body=f"""
+        body="""
         <table class="table poll auto-width" id="poll">
    <tbody>
       <tr class="vote ">
@@ -160,7 +160,7 @@ def create_no_event_found_endpoints(rsps: responses.RequestsMock, poll_id: str):
     rsps.add(
         responses.GET,
         f"https://bitpoll.de/poll/{poll_id}",
-        body=f"""
+        body="""
         <html>
             <table id="poll">
                 <thead><tr>

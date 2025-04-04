@@ -24,9 +24,7 @@ def close_driver(driver):
 
 
 def login(driver, username, password):
-    driver.get(
-        f"https://ssl.forumedia.eu/zhs-courtbuchung.de/reservations.php?action=showRevervations&type_id=2"
-    )
+    driver.get("https://ssl.forumedia.eu/zhs-courtbuchung.de/reservations.php?action=showRevervations&type_id=2")
 
     print("Logging in")
     driver.find_element(By.ID, "login_block").click()
@@ -54,9 +52,7 @@ def find_and_book_slots(driver, booking_date, booking_times):
         driver.get(
             f"https://zhs-courtbuchung.de/reservations.php?action=showRevervations&type_id=2&date={booking_date}&page={page}"
         )
-        fields = driver.find_elements(
-            By.XPATH, "//form[@action='reservation_order.php']"
-        )
+        fields = driver.find_elements(By.XPATH, "//form[@action='reservation_order.php']")
 
         slot_collection = []
 
@@ -65,18 +61,11 @@ def find_and_book_slots(driver, booking_date, booking_times):
             field_name = field.find_element(By.XPATH, ".//th").text
             print(f"Searching through {field_name}")
 
-            available_slots = field.find_elements(
-                By.XPATH, ".//input[@type='checkbox']"
-            )
+            available_slots = field.find_elements(By.XPATH, ".//input[@type='checkbox']")
             for slot in available_slots:
-                if any(
-                    booking_time in slot.get_attribute("name")
-                    for booking_time in booking_times
-                ):
+                if any(booking_time in slot.get_attribute("name") for booking_time in booking_times):
                     # If current slot time is in desired booking times
-                    print(
-                        f"Slot found: {slot.get_attribute('name')} on field {field_name}"
-                    )
+                    print(f"Slot found: {slot.get_attribute('name')} on field {field_name}")
 
                     slot_collection.append(slot)
 
@@ -85,39 +74,25 @@ def find_and_book_slots(driver, booking_date, booking_times):
 
                         # Mark slots found
                         for slot in slot_collection:
-                            time.sleep(
-                                random.uniform(0.2, 0.9)
-                            )  # Wait a bit to fool captcha
+                            time.sleep(random.uniform(0.2, 0.9))  # Wait a bit to fool captcha
                             driver.execute_script("arguments[0].click();", slot)
 
                         try:
                             # Book slots
-                            print(f"Booking...")
-                            button_book = field.find_element(
-                                By.XPATH, ".//input[@type='submit'][@value='Buchung']"
-                            )
+                            print("Booking...")
+                            button_book = field.find_element(By.XPATH, ".//input[@type='submit'][@value='Buchung']")
                             driver.execute_script("arguments[0].click();", button_book)
 
                             # print(driver.page_source)
 
-                            time.sleep(
-                                random.uniform(2.5, 3.5)
-                            )  # Wait a bit for the next page to be loaded
-                            button_confirm = driver.find_element(
-                                By.XPATH, "//input[@type='submit'][@value='Bestätigen']"
-                            )
-                            driver.execute_script(
-                                "arguments[0].click();", button_confirm
-                            )
+                            time.sleep(random.uniform(2.5, 3.5))  # Wait a bit for the next page to be loaded
+                            button_confirm = driver.find_element(By.XPATH, "//input[@type='submit'][@value='Bestätigen']")
+                            driver.execute_script("arguments[0].click();", button_confirm)
 
                             # Check if booking was successful
-                            time.sleep(
-                                random.uniform(2.5, 3.5)
-                            )  # Wait a bit for the next page to be loaded
+                            time.sleep(random.uniform(2.5, 3.5))  # Wait a bit for the next page to be loaded
                             try:
-                                driver.find_element(
-                                    By.XPATH, "//h2[text()='Vielen Dank']"
-                                )
+                                driver.find_element(By.XPATH, "//h2[text()='Vielen Dank']")
                                 return "success"
                             except Exception as e:
                                 if "captcha" in driver.page_source:

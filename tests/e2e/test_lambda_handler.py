@@ -34,9 +34,7 @@ def test_create_new_poll(mock_gmail_send):
     assert poll_item["next_schafkopf_event"] is None
     assert poll_item["uuid"] == POLL_ITEM_UUID
 
-    mock_gmail_send.assert_called_with(
-        receivers=ANY, subject="New Schafkopf Round", body=ANY
-    )
+    mock_gmail_send.assert_called_with(receivers=ANY, subject="New Schafkopf Round", body=ANY)
     mock_receivers = mock_gmail_send.call_args[1]["receivers"]
     assert set(mock_receivers) == {"test2@example.com", "test@example.com"}
 
@@ -66,9 +64,7 @@ def test_new_event_date_found(mock_gmail_send):
     assert poll_item["start_next_poll_date"] == "2023-01-11T18:30:00"
     assert poll_item["uuid"] == POLL_ITEM_UUID
 
-    mock_gmail_send.assert_called_with(
-        receivers=ANY, subject="Schafkopfen on 09.01", body=ANY, attachment=ANY
-    )
+    mock_gmail_send.assert_called_with(receivers=ANY, subject="Schafkopfen on 09.01", body=ANY, attachment=ANY)
     mock_args = mock_gmail_send.call_args[1]
     assert set(mock_args["receivers"]) == {"test2@example.com", "test@example.com"}
     assert "Lukas2" in mock_args["body"]
