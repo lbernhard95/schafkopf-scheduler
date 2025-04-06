@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 selenium/standalone-chromium:125.0-chromedriver-125.0   AS base
+FROM selenium/standalone-chromium:125.0-chromedriver-125.0   AS base
 WORKDIR /app
 
 ENV POETRY_VIRTUALENVS_CREATE=false \
