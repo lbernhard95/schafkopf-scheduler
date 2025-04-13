@@ -1,4 +1,6 @@
 from datetime import datetime, timedelta
+
+from beachbooker import gmail, config
 from beachbooker.env import Environment
 from core.log import logger
 from functions import get_driver, close_driver, login, find_and_book_slots
@@ -51,6 +53,8 @@ def main():
             captcha_count = 0
 
     close_driver(driver)
+    logger.info("Sending Logs via mail")
+    gmail.send_beachbooker_run_logs(receivers=config.NOTIFICATION_RECEIVER_EMAILS)
 
 
 if __name__ == "__main__":
