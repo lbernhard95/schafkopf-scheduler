@@ -24,5 +24,5 @@ def create_log_attachement(log_file_path: Path) -> MIMEBase:
     part = MIMEBase("application", "octet-stream")
     part.set_payload(log_content.encode("utf-8"))
     encoders.encode_base64(part)
-    part.add_header("Content-Disposition", f"attachment; filename=beachbooker_log_{datetime.now()}.ics")
+    part.add_header("Content-Disposition", f"attachment; filename=beachbooker_log_{datetime.now()}.log")
     return part

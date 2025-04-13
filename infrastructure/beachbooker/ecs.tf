@@ -75,6 +75,7 @@ resource "aws_ecs_task_definition" "beachbooker" {
       { name = "ZHS_PASSWORD", value = jsondecode(data.aws_secretsmanager_secret_version.zhs_user_secret.secret_string)["ZHS_PASSWORD"] },
       { name = "GMAIL_SENDER_ADDRESS", value = var.gmail_sender_email },
       { name = "GMAIL_SENDER_PASSWORD", value = var.gmail_sender_password },
+      { name = "RUNNING_ON_AWS", value = true },
     ]
   }])
 }
