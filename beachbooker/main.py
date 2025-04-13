@@ -16,7 +16,7 @@ def main():
     booking_date = dt.strftime("%Y-%m-%d")
 
     # Note: Sets with a smaller index are prioritized higher!
-    booking_times_sets = [["13:30"], ["14:30"]]
+    booking_times_sets = [["19:00"], ["20:00"], ["18:00"]]
 
     i = 0
     captcha_count = 0
