@@ -61,7 +61,7 @@ def test_new_event_date_found(mock_gmail_send):
     poll_item = poll_table.scan()[0]
     assert poll_item["running_poll_id"] == running_poll_id
     assert poll_item["next_schafkopf_event"] == "2023-01-09T18:30:00"
-    assert poll_item["start_next_poll_date"] == "2023-01-13T18:30:00"
+    assert poll_item["start_next_poll_date"] == "2023-01-16T18:30:00"
     assert poll_item["uuid"] == POLL_ITEM_UUID
 
     mock_gmail_send.assert_called_with(receivers=ANY, subject="Schafkopfen on 09.01", body=ANY, attachment=ANY)
