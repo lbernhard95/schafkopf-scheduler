@@ -25,7 +25,7 @@ class PollItem(BaseModel):
         )
 
     def event_scheduled_update(self, event_date: datetime):
-        self.start_next_poll_date = event_date + timedelta(days=4)
+        self.start_next_poll_date = event_date + timedelta(days=7)
         self.next_schafkopf_event = event_date
 
     def poll_is_running(self) -> bool:
