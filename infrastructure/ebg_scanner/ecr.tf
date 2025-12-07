@@ -1,10 +1,10 @@
-resource "aws_ecr_repository" "beachbooker" {
-  name         = "beachbooker-lambda"
+resource "aws_ecr_repository" "ebg_scanner" {
+  name         = "ebg_scanner-lambda"
   force_delete = true
 }
 
-resource "aws_ecr_lifecycle_policy" "beachbooker" {
-  repository = aws_ecr_repository.beachbooker.name
+resource "aws_ecr_lifecycle_policy" "ebg_scanner" {
+  repository = aws_ecr_repository.ebg_scanner.name
 
   policy = jsonencode(
     {
@@ -26,7 +26,7 @@ resource "aws_ecr_lifecycle_policy" "beachbooker" {
 }
 
 
-data "aws_ecr_image" "beachbooker" {
-  repository_name = aws_ecr_repository.beachbooker.name
+data "aws_ecr_image" "ebg_scanner" {
+  repository_name = aws_ecr_repository.ebg_scanner.name
   image_tag       = "latest"
 }

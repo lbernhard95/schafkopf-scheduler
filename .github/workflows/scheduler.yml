@@ -100,7 +100,7 @@ jobs:
         run: |
           docker build -f ./schafkopf/scheduler/Dockerfile -t 082113759242.dkr.ecr.eu-central-1.amazonaws.com/schafkopf-scheduler-lambda:latest .
           docker push 082113759242.dkr.ecr.eu-central-1.amazonaws.com/schafkopf-scheduler-lambda:latest
-  build-beachbooker:
+  build-ebg_scanner:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     needs:
@@ -117,15 +117,15 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
       - name: Build, tag, and push docker image to Amazon ECR
         run: |
-          docker build --target base -f ./beachbooker/Dockerfile -t 082113759242.dkr.ecr.eu-central-1.amazonaws.com/beachbooker-lambda:latest .
-          docker push 082113759242.dkr.ecr.eu-central-1.amazonaws.com/beachbooker-lambda:latest
+          docker build -f ./ebg_scanner/Dockerfile -t 082113759242.dkr.ecr.eu-central-1.amazonaws.com/ebg_scanner-lambda:latest .
+          docker push 082113759242.dkr.ecr.eu-central-1.amazonaws.com/ebg_scanner-lambda:latest
   deploy:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     needs:
       - build-scheduler
       - build-api
-      - build-beachbooker
+      - build-ebg_scanner
     steps:
       - uses: actions/checkout@v4
       - name: Configure AWS Credentials
