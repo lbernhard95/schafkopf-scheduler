@@ -6,7 +6,7 @@ from core.gmail.client import GmailClient
 URL = "https://ebg-muenchen-west.de/wohnungsangebote/"
 
 
-def lambda_handler():
+def lambda_handler(event, context):
     if load_available_apartments():
         print("Apartments available")
         notify_on_available_apartments()
