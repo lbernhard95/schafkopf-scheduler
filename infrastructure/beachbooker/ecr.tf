@@ -1,5 +1,6 @@
 resource "aws_ecr_repository" "beachbooker" {
-  name = "beachbooker-lambda"
+  name         = "beachbooker-lambda"
+  force_delete = true
 }
 
 resource "aws_ecr_lifecycle_policy" "beachbooker" {

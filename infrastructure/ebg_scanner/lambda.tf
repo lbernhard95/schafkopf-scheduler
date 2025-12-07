@@ -4,7 +4,7 @@ resource "aws_lambda_function" "ebg_scanner" {
   image_uri        = "${aws_ecr_repository.ebg_scanner.repository_url}:latest"
   source_code_hash = replace(data.aws_ecr_image.ebg_scanner.image_digest, "sha256:", "")
   timeout          = 60
-  memory_size      = 512
+  memory_size      = 256
 
   role = aws_iam_role.ebg_scanner.arn
 

@@ -1,5 +1,6 @@
 resource "aws_ecr_repository" "ebg_scanner" {
-  name = "ebg_scanner-lambda"
+  name         = "ebg_scanner-lambda"
+  force_delete = true
 }
 
 resource "aws_ecr_lifecycle_policy" "ebg_scanner" {
