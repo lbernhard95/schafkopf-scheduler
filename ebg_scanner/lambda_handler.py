@@ -25,9 +25,21 @@ def notify_on_available_apartments():
     GmailClient().send(
         receivers=["L.J.Bernhard@web.de"],
         subject="Apartments available at EBG München West",
-        body="Apartments are available! Check https://ebg-muenchen-west.de/wohnungsangebote/",
+        body="""
+        <html>
+          <body>
+            <p>
+              Apartments are available!<br>
+              Check the latest offers here:<br>
+              <a href="https://ebg-muenchen-west.de/wohnungsangebote/" target="_blank">
+                EBG München West Apartment Listings
+              </a>
+            </p>
+          </body>
+        </html>
+        """,
     )
 
 
 if __name__ == "__main__":
-    lambda_handler()
+    notify_on_available_apartments()
