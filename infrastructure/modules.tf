@@ -24,5 +24,7 @@ module "beachbooker" {
 */
 
 module "ebg_scanner" {
-  source = "./ebg_scanner"
+  source                = "./ebg_scanner"
+  gmail_sender_email    = local.gmail_sender_email
+  gmail_sender_password = local.gmail_sender_password
 }
