@@ -8,6 +8,13 @@ resource "aws_lambda_function" "ebg_scanner" {
 
   role = aws_iam_role.ebg_scanner.arn
 
+  environment {
+    variables = {
+      GMAIL_SENDER_ADDRESS  = var.gmail_sender_email
+      GMAIL_SENDER_PASSWORD = var.gmail_sender_password
+    }
+  }
+
 }
 
 resource "aws_iam_role" "ebg_scanner" {
