@@ -1,4 +1,5 @@
 
+/*
 module "web" {
   source = "./web"
   providers = {
@@ -15,7 +16,6 @@ module "api" {
   gmail_sender_password = local.gmail_sender_password
 }
 
-/*
 module "beachbooker" {
   source                = "./beachbooker"
   gmail_sender_email    = local.gmail_sender_email
