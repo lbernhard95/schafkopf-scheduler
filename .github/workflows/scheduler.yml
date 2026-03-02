@@ -15,8 +15,6 @@ jobs:
   build-ebg_scanner:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
-    needs:
-      - validation
     steps:
       - uses: actions/checkout@v4
       - name: Configure AWS Credentials
@@ -34,8 +32,6 @@ jobs:
   build-whatsapp_client:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
-    needs:
-      - validation
     steps:
       - uses: actions/checkout@v4
       - name: Configure AWS Credentials
