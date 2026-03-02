@@ -2,9 +2,11 @@
 # This includes the Lambda Runtime Interface Client (RIC) built-in
 FROM public.ecr.aws/lambda/nodejs:22
 
-# Install Bun runtime
-RUN curl -fsSL https://bun.sh/install | bash -s -- bun-v1.1.38 && \
-    ln -s /root/.bun/bin/bun /usr/local/bin/bun
+# Install unzip (required for Bun installer) and Bun runtime
+RUN dnf install -y unzip && \
+    curl -fsSL https://bun.sh/install | bash -s -- bun-v1.1.38 && \
+    ln -s /root/.bun/bin/bun /usr/local/bin/bun && \
+    dnf clean all
 
 # Set work directory to Lambda's task root
 WORKDIR ${LAMBDA_TASK_ROOT}
