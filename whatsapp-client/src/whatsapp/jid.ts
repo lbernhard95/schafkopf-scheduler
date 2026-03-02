@@ -2,19 +2,27 @@ import { InvalidJidError } from './errors';
 
 /**
  * Converts a phone number to WhatsApp JID format
- * @param phoneNumber - Phone number with country code (e.g., "4917657753775")
- * @returns JID in format "4917657753775@s.whatsapp.net"
+ * Note: For group chats, pass the full JID with @g.us domain
+ *
+ * @param phoneNumber - Phone number with country code (e.g., "4917657753775") OR full JID
+ * @returns JID in format "4917657753775@s.whatsapp.net" or original if already contains @
+ *
+ * @example
+ * toJid("4917657753775") // Returns: "4917657753775@s.whatsapp.net"
+ * toJid("4917657753775@s.whatsapp.net") // Returns: "4917657753775@s.whatsapp.net" (unchanged)
+ * toJid("GROUP_ID@g.us") // Returns: "GROUP_ID@g.us" (unchanged)
  */
 export function toJid(phoneNumber: string): string {
   // Remove common formatting characters
   const cleaned = phoneNumber.replace(/[\s\-\(\)]/g, '');
 
-  // If already a JID, return as-is
+  // If already a JID (contains @), return as-is
+  // This handles both individual JIDs (@s.whatsapp.net) and group JIDs (@g.us)
   if (cleaned.includes('@')) {
     return cleaned;
   }
 
-  // Convert to JID format
+  // Convert phone number to individual chat JID format
   return `${cleaned}@s.whatsapp.net`;
 }
 
@@ -41,12 +49,13 @@ export function normalizeJid(jid: string): string {
 
 /**
  * Validates if a string is a valid WhatsApp JID
+ * Supports both individual (@s.whatsapp.net) and group (@g.us) JIDs
  * @param jid - String to validate
  * @returns true if valid JID format
  */
 export function isValidJid(jid: string): boolean {
-  // Basic validation: should contain @ and end with .net
-  return /^[^@]+@[^@]+\.net$/.test(jid);
+  // Should contain @ and end with either .net (individual) or .us (group)
+  return /^[^@]+@[^@]+\.(net|us)$/.test(jid);
 }
 
 /**

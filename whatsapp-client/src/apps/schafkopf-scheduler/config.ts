@@ -33,9 +33,12 @@ export function getConfig(): SchedulerConfig {
       // Title of the poll message
       pollTitle: 'Next Schafkopf Event Poll',
 
-      // Recipient phone number (without country code prefix like +)
-      // Later this can be changed to a group JID (e.g., "group-id@g.us")
-      recipient: '4917657753775',
+      // Recipient in WhatsApp JID format (must include domain)
+      // Two formats are supported:
+      // 1. Individual chat: "PHONE_NUMBER@s.whatsapp.net" (e.g., "4917657753775@s.whatsapp.net")
+      // 2. Group chat: "GROUP_ID@g.us" (e.g., "F0lbfP8l2zeIRBOtBJg6AB@g.us")
+      // Note: Phone numbers should include country code without + prefix
+      recipient: '4917657753775@s.whatsapp.net',
 
       // Timezone for date calculations
       timezone: 'Europe/Berlin',

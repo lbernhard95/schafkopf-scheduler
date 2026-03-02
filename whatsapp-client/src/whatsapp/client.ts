@@ -99,7 +99,7 @@ export class WhatsAppClient {
 
   /**
    * Sends a text message
-   * @param recipient - Phone number (e.g., "1234567890") or JID (e.g., "1234567890@s.whatsapp.net")
+   * @param recipient - Phone number (e.g., "1234567890"), individual JID (e.g., "1234567890@s.whatsapp.net"), or group JID (e.g., "GROUP_ID@g.us")
    * @param text - The message text
    * @returns The message ID
    * @throws WhatsAppError if sending fails
@@ -121,7 +121,7 @@ export class WhatsAppClient {
 
   /**
    * Sends a poll message
-   * @param recipient - Phone number (e.g., "1234567890") or JID (e.g., "1234567890@s.whatsapp.net")
+   * @param recipient - Phone number (e.g., "1234567890"), individual JID (e.g., "1234567890@s.whatsapp.net"), or group JID (e.g., "GROUP_ID@g.us")
    * @param question - The poll question
    * @param options - Array of poll options (2-12 options)
    * @param selectableCount - Number of options users can select (default: 1)
