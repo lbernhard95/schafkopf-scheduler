@@ -85,7 +85,7 @@ export async function downloadAuthFromS3(authDir: string, logger: Logger): Promi
     }
 
     const message = error instanceof Error ? error.message : String(error);
-    throw new Error(`Failed to download auth from S3: ${message}`);
+    console.log(`Failed to download auth from S3: ${message}`);
   }
 }
 

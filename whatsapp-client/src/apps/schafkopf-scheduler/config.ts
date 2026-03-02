@@ -8,7 +8,7 @@ export interface SchedulerConfig {
   };
   scheduler: {
     pollTitle: string;
-    recipient: string;
+    recipientName: string; // Changed from 'recipient' to 'recipientName' for clarity
     timezone: string;
     weekdaysCount: number;
   };
@@ -33,12 +33,14 @@ export function getConfig(): SchedulerConfig {
       // Title of the poll message
       pollTitle: 'Next Schafkopf Event Poll',
 
-      // Recipient in WhatsApp JID format (must include domain)
-      // Two formats are supported:
-      // 1. Individual chat: "PHONE_NUMBER@s.whatsapp.net" (e.g., "4917657753775@s.whatsapp.net")
-      // 2. Group chat: "GROUP_ID@g.us" (e.g., "HbgNlG0Ftnf6ZWH7WTETCn@g.us")
-      // Note: Phone numbers should include country code without + prefix
-      recipient: 'HbgNlG0Ftnf6ZWH7WTETCn@g.us',
+      // Recipient name (group or contact)
+      // This will be resolved dynamically to the correct JID
+      // The match is exact but case-insensitive and emoji-independent
+      // Examples:
+      //   - 'AT Schafkopf' matches 'AT Schafkopf 🪙'
+      //   - 'John Doe' matches individual contact named 'John Doe'
+      recipientName: 'AT Schafkopf',
+
       // Timezone for date calculations
       timezone: 'Europe/Berlin',
 

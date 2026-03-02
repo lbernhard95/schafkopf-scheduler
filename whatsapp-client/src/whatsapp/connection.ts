@@ -45,6 +45,10 @@ export async function createConnection(options: CreateConnectionOptions): Promis
       auth: state,
       syncFullHistory: false,
       printQRInTerminal: false, // We handle QR ourselves
+      // getMessage: async (key) => {
+      //   // This is needed for proper group message handling
+      //   return { conversation: '' }
+      // },
       logger: {
         level: 'silent',
         fatal: () => {},
@@ -72,7 +76,7 @@ export async function createConnection(options: CreateConnectionOptions): Promis
     await new Promise<void>((resolve, reject) => {
       let resolved = false;
 
-      sock.ev.on('connection.update', (update) => {
+      sock.ev.on('connection.update', async (update) => {
         const { connection, lastDisconnect, qr } = update;
 
         // Handle QR code for new authentication
@@ -89,6 +93,17 @@ export async function createConnection(options: CreateConnectionOptions): Promis
         // Connection opened successfully
         if (connection === 'open' && !resolved) {
           logger.info('Connected to WhatsApp successfully');
+
+          // Fetch all participating groups to ensure group metadata is synced
+          try {
+            logger.debug('Fetching participating groups...');
+            await sock.groupFetchAllParticipating();
+            logger.debug('Groups fetched successfully');
+          } catch (error) {
+            logger.warn(`Failed to fetch groups: ${error instanceof Error ? error.message : String(error)}`);
+            // Don't fail connection if group fetch fails
+          }
+
           resolved = true;
           resolve();
         }

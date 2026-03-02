@@ -5,6 +5,7 @@ import { sendText as sendTextMessage, sendPoll as sendPollMessage } from './mess
 import { normalizeJid, ensureValidJid, toJid, fromJid, isGroupJid } from './jid';
 import type { WhatsAppClientOptions, PollConfig, ConnectionState } from './types';
 import { WhatsAppError } from './errors';
+import { resolveRecipientName } from './recipient-resolver';
 
 /**
  * Main WhatsApp client class that provides a clean API for sending messages
@@ -176,6 +177,22 @@ export class WhatsAppClient {
       this.logger.error(`Error during disconnect: ${errorMessage}`);
       throw error;
     }
+  }
+
+  /**
+   * Resolves a recipient name to a JID
+   * Searches for an exact match (case-insensitive, emoji-independent) in groups and contacts
+   * @param name - The recipient name to resolve (e.g., "AT Schafkopf")
+   * @returns The resolved JID
+   * @throws WhatsAppError if no match or multiple matches found
+   *
+   * @example
+   * const jid = await client.resolveRecipient('AT Schafkopf');
+   * // Returns: '120363210843931982@g.us'
+   */
+  async resolveRecipient(name: string): Promise<string> {
+    const sock = await this.ensureConnected();
+    return await resolveRecipientName(sock, name, this.logger);
   }
 
   /**

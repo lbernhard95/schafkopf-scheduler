@@ -73,10 +73,14 @@ export class SchafkopfScheduler {
    * @returns Message ID of the sent poll
    */
   private async sendPoll(pollOptions: string[]): Promise<string> {
-    this.logger.info(`Sending poll to ${this.config.scheduler.recipient}...`);
+    // Resolve recipient name to JID
+    this.logger.info(`Resolving recipient name: "${this.config.scheduler.recipientName}"...`);
+    const recipientJid = await this.client.resolveRecipient(this.config.scheduler.recipientName);
+
+    this.logger.info(`Sending poll to ${recipientJid}...`);
 
     const messageId = await this.client.sendPoll(
-      this.config.scheduler.recipient,
+      recipientJid,
       this.config.scheduler.pollTitle,
       pollOptions,
       pollOptions.length // Allow selecting all options (multi-select)
