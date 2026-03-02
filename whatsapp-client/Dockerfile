@@ -21,10 +21,11 @@ COPY src ./src
 COPY tsconfig.json ./
 
 # Bundle TypeScript to JavaScript with all dependencies
-# This creates a single index.js file with everything bundled
+# This creates a single index.js file with everything bundled in CommonJS format
 RUN bun build src/lambda.ts \
     --target=node \
     --outfile=dist/index.js \
+    --format=cjs \
     --minify \
     --sourcemap
 
