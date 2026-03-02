@@ -1,0 +1,43 @@
+# Dependencies
+node_modules
+
+# Build files
+dist
+*.log
+
+# Git
+.git
+.gitignore
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Temporary files
+tmp
+*.tmp
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Documentation
+README.md
+LICENSE
+docs
+
+# Docker
+Dockerfile*
+.dockerignore
+
+# Test files
+tests
+*.test.ts
+*.spec.ts
+
+# Local auth directory (should use S3)
+auth
+tmp/auth

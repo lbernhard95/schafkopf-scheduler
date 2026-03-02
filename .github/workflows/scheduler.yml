@@ -12,94 +12,6 @@ permissions:
   contents: read
 
 jobs:
-  validation:
-    runs-on: ubuntu-latest
-    env:
-      AWS_DEFAULT_REGION: "eu-central-1"
-    steps:
-      - uses: actions/checkout@v4
-      - uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.9.8
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Install Poetry
-        run: pip install poetry==2.1.2
-      - name: Install dependencies
-        run: poetry install
-      - name: Run pre-commit hooks
-        run: poetry run pre-commit run --all-files
-      - name: Run validation
-        run: poetry run pytest tests
-  build-web:
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - uses: actions/checkout@v4
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::082113759242:role/github_oidc_role
-          aws-region: eu-central-1
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22.11.0'
-
-      - name: Install Yarn
-        run: npm install -g yarn@1.22.22
-
-      - name: Install dependencies
-        working-directory: web
-        run: yarn install
-
-      - name: Build project
-        working-directory: web
-        run: yarn build
-
-      - name: Upload to S3
-        working-directory: web
-        run: |
-          aws s3 sync ./build s3://schafkopf-web-082113759242 --delete
-  build-api:
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    needs:
-      - validation
-    steps:
-      - uses: actions/checkout@v4
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::082113759242:role/github_oidc_role
-          aws-region: eu-central-1
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-      - name: Build, tag, and push docker image to Amazon ECR
-        run: |
-          docker build -f ./schafkopf/api/Dockerfile -t 082113759242.dkr.ecr.eu-central-1.amazonaws.com/schafkopf-api-lambda:latest .
-          docker push 082113759242.dkr.ecr.eu-central-1.amazonaws.com/schafkopf-api-lambda:latest
-  build-scheduler:
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    needs:
-      - validation
-    steps:
-      - uses: actions/checkout@v4
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::082113759242:role/github_oidc_role
-          aws-region: eu-central-1
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-      - name: Build, tag, and push docker image to Amazon ECR
-        run: |
-          docker build -f ./schafkopf/scheduler/Dockerfile -t 082113759242.dkr.ecr.eu-central-1.amazonaws.com/schafkopf-scheduler-lambda:latest .
-          docker push 082113759242.dkr.ecr.eu-central-1.amazonaws.com/schafkopf-scheduler-lambda:latest
   build-ebg_scanner:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
@@ -119,13 +31,31 @@ jobs:
         run: |
           docker build -f ./ebg_scanner/Dockerfile -t 082113759242.dkr.ecr.eu-central-1.amazonaws.com/ebg_scanner-lambda:latest .
           docker push 082113759242.dkr.ecr.eu-central-1.amazonaws.com/ebg_scanner-lambda:latest
+  build-whatsapp_client:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    needs:
+      - validation
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::082113759242:role/github_oidc_role
+          aws-region: eu-central-1
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+      - name: Build, tag, and push docker image to Amazon ECR
+        run: |
+          docker build --platform linux/amd64 -f ./whatsapp-client/Dockerfile -t 082113759242.dkr.ecr.eu-central-1.amazonaws.com/whatsapp_scheduler-lambda:latest ./whatsapp-client
+          docker push 082113759242.dkr.ecr.eu-central-1.amazonaws.com/whatsapp_scheduler-lambda:latest
   deploy:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     needs:
-      - build-scheduler
-      - build-api
       - build-ebg_scanner
+      - build-whatsapp_client
     steps:
       - uses: actions/checkout@v4
       - name: Configure AWS Credentials

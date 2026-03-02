@@ -6,9 +6,11 @@
   "scripts": {
     "example": "bun src/examples/basic-usage.ts",
     "scheduler": "bun src/apps/schafkopf-scheduler/index.ts",
+    "lambda": "bun run src/lambda.ts",
     "upload-auth": "bun src/scripts/upload-auth-to-s3.ts"
   },
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.145",
     "@types/bun": "latest",
     "@types/qrcode-terminal": "^0.12.2"
   },
