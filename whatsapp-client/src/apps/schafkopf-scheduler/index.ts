@@ -8,7 +8,7 @@
  *   bun run scheduler
  */
 
-import { loadConfig, getDefaultConfigPath } from './config';
+import { getConfig } from './config';
 import { SchafkopfScheduler } from './scheduler';
 
 /**
@@ -18,11 +18,9 @@ async function main() {
   console.log('=== Schafkopf Event Scheduler ===\n');
 
   try {
-    // Load configuration
-    const configPath = getDefaultConfigPath();
-    console.log(`Loading configuration from: ${configPath}`);
-    const config = loadConfig(configPath);
-    console.log('Configuration loaded successfully\n');
+    // Get hardcoded configuration
+    const config = getConfig();
+    console.log('Configuration loaded\n');
 
     // Create and run scheduler
     const scheduler = new SchafkopfScheduler(config);

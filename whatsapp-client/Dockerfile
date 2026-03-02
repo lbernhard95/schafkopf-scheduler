@@ -18,7 +18,6 @@ RUN bun install --frozen-lockfile
 
 # Copy application source code
 COPY src ./src
-COPY config ./config
 COPY tsconfig.json ./
 
 # Bundle TypeScript to JavaScript with all dependencies
@@ -39,9 +38,6 @@ WORKDIR ${LAMBDA_TASK_ROOT}
 
 # Copy only the bundled JavaScript from builder
 COPY --from=builder /build/dist/index.js ./
-
-# Copy config files (needed at runtime)
-COPY --from=builder /build/config ./config
 
 # Set the CMD to the Lambda handler in standard format
 # Lambda will invoke: index.handler()

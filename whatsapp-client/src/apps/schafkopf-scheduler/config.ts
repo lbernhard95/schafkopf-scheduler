@@ -1,7 +1,3 @@
-import yaml from 'js-yaml';
-import path from 'node:path';
-import { readFileSync, existsSync } from 'node:fs';
-
 /**
  * Configuration interface for Schafkopf Scheduler
  */
@@ -19,105 +15,33 @@ export interface SchedulerConfig {
 }
 
 /**
- * Default configuration values
+ * Hardcoded configuration for Schafkopf Scheduler
+ * All values are defined here instead of loading from a file
  */
-const DEFAULT_CONFIG: SchedulerConfig = {
-  whatsapp: {
-    authDir: './tmp/auth',
-    logLevel: 'info',
-  },
-  scheduler: {
-    pollTitle: 'Next Schafkopf Event Poll',
-    recipient: '',
-    timezone: 'Europe/Berlin',
-    weekdaysCount: 10,
-  },
-};
-
-/**
- * Loads configuration from YAML file
- * @param configPath - Path to the YAML configuration file
- * @returns Parsed and validated configuration
- * @throws Error if config file doesn't exist or is invalid
- */
-export function loadConfig(configPath: string): SchedulerConfig {
-  // Check if file exists
-  if (!existsSync(configPath)) {
-    throw new Error(`Configuration file not found: ${configPath}`);
-  }
-
-  // Read and parse YAML
-  let rawConfig: any;
-  try {
-    const fileContents = readFileSync(configPath, 'utf8');
-    rawConfig = yaml.load(fileContents);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    throw new Error(`Failed to parse YAML configuration: ${message}`);
-  }
-
-  // Validate and merge with defaults
-  const config: SchedulerConfig = {
+export function getConfig(): SchedulerConfig {
+  return {
     whatsapp: {
-      authDir: rawConfig?.whatsapp?.authDir || DEFAULT_CONFIG.whatsapp.authDir,
-      logLevel: rawConfig?.whatsapp?.logLevel || DEFAULT_CONFIG.whatsapp.logLevel,
+      // Directory where WhatsApp authentication data is stored
+      // NOTE: Auth is always synced with S3 (bucket: whatsapp-scheduler-082113759242)
+      // Local dev uses ./tmp/auth, Lambda uses /tmp/auth
+      authDir: './tmp/auth',
+
+      // Logging level: silent | error | warn | info | debug
+      logLevel: 'info',
     },
     scheduler: {
-      pollTitle: rawConfig?.scheduler?.pollTitle || DEFAULT_CONFIG.scheduler.pollTitle,
-      recipient: rawConfig?.scheduler?.recipient || DEFAULT_CONFIG.scheduler.recipient,
-      timezone: rawConfig?.scheduler?.timezone || DEFAULT_CONFIG.scheduler.timezone,
-      weekdaysCount: rawConfig?.scheduler?.weekdaysCount || DEFAULT_CONFIG.scheduler.weekdaysCount,
+      // Title of the poll message
+      pollTitle: 'Next Schafkopf Event Poll',
+
+      // Recipient phone number (without country code prefix like +)
+      // Later this can be changed to a group JID (e.g., "group-id@g.us")
+      recipient: '4917657753775',
+
+      // Timezone for date calculations
+      timezone: 'Europe/Berlin',
+
+      // Number of weekdays to include in the poll (default: 10 = 2 weeks of weekdays)
+      weekdaysCount: 10,
     },
   };
-
-  // Validate required fields
-  validateConfig(config);
-
-  return config;
-}
-
-/**
- * Validates that all required configuration fields are present and valid
- * @param config - Configuration to validate
- * @throws Error if validation fails
- */
-function validateConfig(config: SchedulerConfig): void {
-  const errors: string[] = [];
-
-  // Validate recipient
-  if (!config.scheduler.recipient || config.scheduler.recipient.trim() === '') {
-    errors.push('scheduler.recipient is required');
-  }
-
-  // Validate weekdays count
-  if (config.scheduler.weekdaysCount < 1) {
-    errors.push('scheduler.weekdaysCount must be at least 1');
-  }
-
-  if (config.scheduler.weekdaysCount > 20) {
-    errors.push('scheduler.weekdaysCount cannot exceed 20 (4 weeks)');
-  }
-
-  // Validate log level
-  const validLogLevels = ['silent', 'error', 'warn', 'info', 'debug'];
-  if (!validLogLevels.includes(config.whatsapp.logLevel)) {
-    errors.push(`whatsapp.logLevel must be one of: ${validLogLevels.join(', ')}`);
-  }
-
-  // Validate timezone (basic check - just ensure it's not empty)
-  if (!config.scheduler.timezone || config.scheduler.timezone.trim() === '') {
-    errors.push('scheduler.timezone is required');
-  }
-
-  // Throw if any validation errors
-  if (errors.length > 0) {
-    throw new Error(`Configuration validation failed:\n${errors.map(e => `  - ${e}`).join('\n')}`);
-  }
-}
-
-/**
- * Gets the default config file path
- */
-export function getDefaultConfigPath(): string {
-  return path.join(import.meta.dir || '.', '../../../config/schafkopf-scheduler.yaml');
 }
