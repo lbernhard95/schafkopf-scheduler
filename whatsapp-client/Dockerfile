@@ -1,6 +1,7 @@
-# Use the official AWS Lambda Node.js 22 image
-# This includes the Lambda Runtime Interface Client (RIC) built-in
-FROM public.ecr.aws/lambda/nodejs:22
+# ============================================
+# STAGE 1: Builder - Use Bun to bundle TypeScript
+# ============================================
+FROM public.ecr.aws/lambda/nodejs:22 AS builder
 
 # Install unzip (required for Bun installer) and Bun runtime
 RUN dnf install -y unzip && \
@@ -8,20 +9,40 @@ RUN dnf install -y unzip && \
     ln -s /root/.bun/bin/bun /usr/local/bin/bun && \
     dnf clean all
 
-# Set work directory to Lambda's task root
-WORKDIR ${LAMBDA_TASK_ROOT}
+# Set working directory
+WORKDIR /build
 
-# Copy package files
+# Copy package files and install all dependencies (including dev dependencies for bundling)
 COPY package.json bun.lock* ./
+RUN bun install --frozen-lockfile
 
-# Install dependencies with Bun
-RUN bun install --production --frozen-lockfile
-
-# Copy application code
+# Copy application source code
 COPY src ./src
 COPY config ./config
 COPY tsconfig.json ./
 
-# Set the CMD to the Lambda handler
-# Bun can run TypeScript directly, no transpilation needed!
-CMD ["bun", "run", "src/lambda.ts"]
+# Bundle TypeScript to JavaScript with all dependencies
+# This creates a single index.js file with everything bundled
+RUN bun build src/lambda.ts \
+    --target=node \
+    --outfile=dist/index.js \
+    --minify \
+    --sourcemap
+
+# ============================================
+# STAGE 2: Runtime - AWS Lambda Node.js base
+# ============================================
+FROM public.ecr.aws/lambda/nodejs:22
+
+# Set work directory to Lambda's task root
+WORKDIR ${LAMBDA_TASK_ROOT}
+
+# Copy only the bundled JavaScript from builder
+COPY --from=builder /build/dist/index.js ./
+
+# Copy config files (needed at runtime)
+COPY --from=builder /build/config ./config
+
+# Set the CMD to the Lambda handler in standard format
+# Lambda will invoke: index.handler()
+CMD ["index.handler"]
