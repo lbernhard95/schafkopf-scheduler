@@ -166,3 +166,4 @@ cython_debug/
 /infrastructure/terraform.tfstate
 /infrastructure/terraform.tfstate.backup
 /infrastructure/terraform
+/node_modules/
