@@ -1,45 +1,33 @@
 # ============================================
-# STAGE 1: Builder - Use Bun to bundle TypeScript
+# Use AWS Lambda Adapter to convert HTTP requests to Lambda events
 # ============================================
-FROM public.ecr.aws/lambda/nodejs:22 AS builder
+FROM public.ecr.aws/awsguru/aws-lambda-adapter:0.9.0 AS aws-lambda-adapter
 
-# Install unzip (required for Bun installer) and Bun runtime
-RUN dnf install -y unzip && \
-    curl -fsSL https://bun.sh/install | bash -s -- bun-v1.1.38 && \
-    ln -s /root/.bun/bin/bun /usr/local/bin/bun && \
-    dnf clean all
+# ============================================
+# Use official Bun image with Debian base
+# ============================================
+FROM oven/bun:debian AS runtime
 
-# Set working directory
-WORKDIR /build
+# Copy the Lambda adapter into the container
+COPY --from=aws-lambda-adapter /lambda-adapter /opt/extensions/lambda-adapter
 
-# Copy package files and install all dependencies (including dev dependencies for bundling)
+# Set the port to 8080 (required for AWS Lambda adapter)
+ENV PORT=8080
+
+# Set work directory to Lambda's task root
+WORKDIR /var/task
+
+# Copy package files and install dependencies
 COPY package.json bun.lock* ./
-RUN bun install --frozen-lockfile
+RUN bun install --production --frozen-lockfile
 
 # Copy application source code
 COPY src ./src
 COPY tsconfig.json ./
 
-# Bundle TypeScript to JavaScript with all dependencies
-# This creates a single index.js file with everything bundled in CommonJS format
-RUN bun build src/lambda.ts \
-    --target=node \
-    --outfile=dist/index.js \
-    --format=cjs \
-    --minify \
-    --sourcemap
+# Create tmp directory for WhatsApp auth files
+RUN mkdir -p tmp/auth
 
-# ============================================
-# STAGE 2: Runtime - AWS Lambda Node.js base
-# ============================================
-FROM public.ecr.aws/lambda/nodejs:22
-
-# Set work directory to Lambda's task root
-WORKDIR ${LAMBDA_TASK_ROOT}
-
-# Copy only the bundled JavaScript from builder
-COPY --from=builder /build/dist/index.js ./
-
-# Set the CMD to the Lambda handler in standard format
-# Lambda will invoke: index.handler()
-CMD ["index.handler"]
+# Run the HTTP server with Bun
+# Lambda Adapter will convert Lambda events to HTTP requests
+CMD ["bun", "src/lambda-server.ts"]
