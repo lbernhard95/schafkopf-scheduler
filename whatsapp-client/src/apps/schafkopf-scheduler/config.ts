@@ -36,10 +36,9 @@ export function getConfig(): SchedulerConfig {
       // Recipient in WhatsApp JID format (must include domain)
       // Two formats are supported:
       // 1. Individual chat: "PHONE_NUMBER@s.whatsapp.net" (e.g., "4917657753775@s.whatsapp.net")
-      // 2. Group chat: "GROUP_ID@g.us" (e.g., "F0lbfP8l2zeIRBOtBJg6AB@g.us")
+      // 2. Group chat: "GROUP_ID@g.us" (e.g., "HbgNlG0Ftnf6ZWH7WTETCn@g.us")
       // Note: Phone numbers should include country code without + prefix
-      recipient: '4917657753775@s.whatsapp.net',
-
+      recipient: 'HbgNlG0Ftnf6ZWH7WTETCn@g.us',
       // Timezone for date calculations
       timezone: 'Europe/Berlin',
 
