@@ -1,0 +1,25 @@
+{
+  "name": "whatsapp-client",
+  "module": "src/index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "example": "bun src/examples/basic-usage.ts",
+    "scheduler": "bun src/apps/schafkopf-scheduler/index.ts",
+    "upload-auth": "bun src/scripts/upload-auth-to-s3.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/qrcode-terminal": "^0.12.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1000.0",
+    "@whiskeysockets/baileys": "^7.0.0-rc.9",
+    "adm-zip": "^0.5.16",
+    "js-yaml": "^4.1.0",
+    "qrcode-terminal": "^0.12.0"
+  }
+}
