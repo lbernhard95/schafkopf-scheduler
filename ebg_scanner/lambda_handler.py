@@ -23,7 +23,7 @@ def load_available_apartments() -> bool:
 
 def notify_on_available_apartments():
     GmailClient().send(
-        receivers=["L.J.Bernhard@web.de"],
+        receivers=["L.J.Bernhard@web.de", "annakrymova1@gmail.com"],
         subject="Apartments available at EBG München West",
         body="""
         <html>
