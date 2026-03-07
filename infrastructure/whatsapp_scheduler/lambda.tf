@@ -57,7 +57,7 @@ resource "aws_iam_role_policy_attachment" "whatsapp_scheduler" {
   policy_arn = aws_iam_policy.whatsapp_scheduler.arn
 }
 
-/*
+
 resource "aws_lambda_permission" "allow_cloudwatch" {
   statement_id  = "AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
@@ -67,4 +67,3 @@ resource "aws_lambda_permission" "allow_cloudwatch" {
   # Reference the ARN of the CloudWatch event rule
   source_arn = aws_cloudwatch_event_rule.whatsapp_scheduler.arn
 }
-*/

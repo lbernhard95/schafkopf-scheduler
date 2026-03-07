@@ -81,3 +81,27 @@ Re-run this script when:
 #### Related Documentation
 
 See [Lambda Deployment Guide](../../docs/LAMBDA_DEPLOYMENT.md) for complete Lambda setup instructions.
+
+---
+
+### `reauth-and-upload.ts`
+
+Force a fresh WhatsApp login (QR scan) and upload the new auth state to S3.
+
+#### Usage
+
+```bash
+bun run reauth-upload
+```
+
+#### What It Does
+
+1. **Clears** local auth directory (`./tmp/auth`) to force QR login
+2. **Prompts** QR scan in terminal
+3. **Uploads** refreshed auth to S3 via `closeConnection`
+
+#### When to Use
+
+- You want to switch WhatsApp accounts
+- S3 auth is stale or invalid
+- You got logged out and need a fresh QR login

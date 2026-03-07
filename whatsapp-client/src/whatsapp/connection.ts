@@ -5,6 +5,7 @@ import {
   DisconnectReason
 } from '@whiskeysockets/baileys';
 import qrcode from 'qrcode-terminal';
+import { existsSync, mkdirSync, rmSync } from 'node:fs';
 import { Logger } from '../core/logger';
 import { AuthenticationError, ConnectionError } from './errors';
 import type { WASocket } from '@whiskeysockets/baileys';
@@ -14,6 +15,8 @@ export interface CreateConnectionOptions {
   authDir: string;
   logger: Logger;
   onQR?: (qr: string) => void;
+  forceReauth?: boolean;
+  downloadFromS3?: boolean;
 }
 
 export interface CreateConnectionResult {
@@ -25,15 +28,24 @@ export interface CreateConnectionResult {
  * Creates a new WhatsApp connection
  */
 export async function createConnection(options: CreateConnectionOptions): Promise<CreateConnectionResult> {
-    const { authDir, logger, onQR } = options;
+    const { authDir, logger, onQR, forceReauth, downloadFromS3 = true } = options;
 
-    // Determine effective auth directory based on environment
-    const isLambda = isLambdaEnvironment();
-    const effectiveAuthDir = isLambda ? '/tmp/auth' : './tmp/auth';
+    const effectiveAuthDir = authDir;
 
-    // Always download auth from S3 (both local and Lambda)
-    logger.info(`Downloading auth from S3...`);
-    await downloadAuthFromS3(effectiveAuthDir, logger);
+    if (forceReauth) {
+      logger.info('Forcing re-authentication, clearing local auth directory...');
+      if (existsSync(effectiveAuthDir)) {
+        rmSync(effectiveAuthDir, { recursive: true, force: true });
+      }
+    } else if (downloadFromS3) {
+      logger.info(`Downloading auth from S3...`);
+      await downloadAuthFromS3(effectiveAuthDir, logger);
+    } else {
+      logger.info('Skipping auth download from S3, using local auth directory...');
+      if (!existsSync(effectiveAuthDir)) {
+        mkdirSync(effectiveAuthDir, { recursive: true });
+      }
+    }
 
     logger.info('Initializing WhatsApp connection...');
 
@@ -72,12 +84,23 @@ export async function createConnection(options: CreateConnectionOptions): Promis
     // Save credentials on update
     sock.ev.on('creds.update', saveCreds);
 
+    logger.debug('Waiting for connection updates...');
     // Wait for connection to open
     await new Promise<void>((resolve, reject) => {
       let resolved = false;
 
       sock.ev.on('connection.update', async (update) => {
         const { connection, lastDisconnect, qr } = update;
+        if (logger) {
+          logger.debug(
+            `connection.update: connection=${connection || 'n/a'} hasQr=${!!qr} lastDisconnect=${
+              lastDisconnect ? JSON.stringify({
+                errorMessage: (lastDisconnect.error as any)?.message,
+                statusCode: (lastDisconnect.error as any)?.output?.statusCode,
+              }) : 'n/a'
+            }`
+          );
+        }
 
         // Handle QR code for new authentication
         if (qr) {
@@ -159,7 +182,7 @@ export async function closeConnection(
 
     // Always upload auth to S3 (both local and Lambda)
     const isLambda = isLambdaEnvironment();
-    const effectiveAuthDir = isLambda ? '/tmp/auth' : './tmp/auth';
+    const effectiveAuthDir = options?.authDir || (isLambda ? '/tmp/auth' : './tmp/auth');
 
     logger.info('Uploading updated auth to S3...');
     try {
