@@ -6,7 +6,7 @@ resource "aws_cloudwatch_log_group" "whatsapp_scheduler" {
 
 resource "aws_cloudwatch_event_rule" "whatsapp_scheduler" {
   name                = "whatsapp_scheduler"
-  schedule_expression = "cron(0 10 ? * 7/2 *)" # Triggers every 2 weeks on Saturday at 10 AM UTC
+  schedule_expression = "rate(14 days)"
 }
 
 resource "aws_cloudwatch_event_target" "lambda_target" {
