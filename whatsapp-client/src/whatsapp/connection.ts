@@ -24,13 +24,26 @@ export interface CreateConnectionResult {
   myJid: string;
 }
 
+function resolveAuthDir(authDir: string): string {
+  const isLambda = isLambdaEnvironment();
+  if (!isLambda) {
+    return authDir;
+  }
+
+  if (authDir.startsWith('/tmp/')) {
+    return authDir;
+  }
+
+  return '/tmp/auth';
+}
+
 /**
  * Creates a new WhatsApp connection
  */
 export async function createConnection(options: CreateConnectionOptions): Promise<CreateConnectionResult> {
     const { authDir, logger, onQR, forceReauth, downloadFromS3 = true } = options;
 
-    const effectiveAuthDir = authDir;
+    const effectiveAuthDir = resolveAuthDir(authDir);
 
     if (forceReauth) {
       logger.info('Forcing re-authentication, clearing local auth directory...');
@@ -180,9 +193,7 @@ export async function closeConnection(
     await sock.end();
     logger.debug('Connection closed');
 
-    // Always upload auth to S3 (both local and Lambda)
-    const isLambda = isLambdaEnvironment();
-    const effectiveAuthDir = options?.authDir || (isLambda ? '/tmp/auth' : './tmp/auth');
+    const effectiveAuthDir = resolveAuthDir(options?.authDir || './tmp/auth');
 
     logger.info('Uploading updated auth to S3...');
     try {
