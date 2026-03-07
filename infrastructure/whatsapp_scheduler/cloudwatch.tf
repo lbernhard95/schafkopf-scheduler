@@ -7,7 +7,7 @@ resource "aws_scheduler_schedule" "whatsapp_scheduler" {
   name                         = "whatsapp_scheduler"
   schedule_expression          = "rate(14 days)"
   schedule_expression_timezone = "Europe/Berlin"
-  start_date                   = "2026-03-07T10:00:00+01:00"
+  start_date                   = "2026-03-21T10:00:00+01:00"
 
   flexible_time_window {
     mode = "OFF"
